@@ -22,7 +22,7 @@ const initialState = {
                 id: 1,
                 nickname: "Vanc",
             },
-            content: "첫 번째 게시글",
+            content: "첫번째 게시물 #해시태그1 #해시태그2",
             Images: [
                 {
                     src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
