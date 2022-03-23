@@ -5,7 +5,13 @@ export const addPost = createAction(ADD_POST);
 
 const dummyPost = {
     id: 2,
-    content: "dummy",
+    content: "더미데이터입니다.",
+    User: {
+        id: 1,
+        nickname: "Vanc",
+    },
+    Images: [],
+    Comments: [],
 };
 
 const initialState = {
@@ -14,15 +20,18 @@ const initialState = {
             id: 1,
             User: {
                 id: 1,
-                nickname: "vanc",
+                nickname: "Vanc",
             },
-            content: "첫 번째 게시글 #해시태그 #익스프레스",
+            content: "첫 번째 게시글",
             Images: [
                 {
-                    src: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Fkr%2Ffree-icon%2Faddress_3447699&psig=AOvVaw1OwtStOls41BuuGnR_rt1F&ust=1648098595288000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJDt0--72_YCFQAAAAAdAAAAABAD",
+                    src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
                 },
                 {
-                    src: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Fkr%2Ffree-icon%2Faddress_1275192&psig=AOvVaw1OwtStOls41BuuGnR_rt1F&ust=1648098595288000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCJDt0--72_YCFQAAAAAdAAAAABAJ",
+                    src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
+                },
+                {
+                    src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
                 },
             ],
             Comments: [
