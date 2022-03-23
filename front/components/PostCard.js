@@ -31,7 +31,7 @@ function PostCard({ post }) {
                     <RetweetOutlined key="retweet" />,
                     <HeartOutlined
                         key="heart"
-                        TwoToneColor="#eb2f96"
+                        twoToneColor="#eb2f96"
                         onClick={onToggleLike}
                     />,
                     <MessageOutlined key="comment" onClick={onToggleForm} />,
