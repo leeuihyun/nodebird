@@ -1,4 +1,4 @@
-import { takeLatest, call, put, fork, all, delay } from "redux-saga";
+import { takeLatest, call, put, fork, all, delay } from "redux-saga/effects";
 import axios from "axios";
 
 function addPostApi(data) {

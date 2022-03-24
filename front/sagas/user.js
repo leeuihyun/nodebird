@@ -1,4 +1,4 @@
-import { takeLatest, put, call, delay, fork, all } from "redux-saga";
+import { takeLatest, put, call, delay, fork, all } from "redux-saga/effects";
 
 import axios from "axios";
 
@@ -15,7 +15,7 @@ function* login(action) {
         yield delay(1000);
         yield put({
             type: "LOG_IN_SUCCESS",
-            //payload: res.data,
+            payload: action.data,
         });
     } catch (err) {
         console.log(err);
