@@ -3,3 +3,5 @@ dist/*
 *.log
 .next
 .babelrc
+package.json
+package-lock.json

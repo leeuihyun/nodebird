@@ -5,7 +5,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "../reducers/user";
+import { logInRequest } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -15,30 +15,32 @@ const FormWrapper = styled(Form)`
     padding: 10px;
 `;
 function LoginForm() {
-    const [id, onChangeId] = useInput("");
-    const [password, onChangePassword] = useInput("");
+    const [email, onChangeEmail, setEmail] = useInput("");
+    const [password, onChangePassword, setPassword] = useInput("");
     const dispatch = useDispatch();
-    const { isLoggingIn } = useSelector((state) => state.user);
+    const { logInLoading } = useSelector((state) => state.user);
     const onSubmitForm = useCallback(() => {
-        console.log(id, password);
-        dispatch(loginRequest({ id, password }));
-    }, [id, password]);
+        console.log(email, password);
+        dispatch(logInRequest({ email, password }));
+    }, [email, password]);
     return (
         <FormWrapper onFinish={onSubmitForm}>
             <div>
-                <label htmlFor="user-id">아이디</label>
+                <label htmlFor="user-email">email</label>
                 <br />
                 <Input
-                    name="user-id"
-                    value={id}
-                    onChange={onChangeId}
+                    name="user-email"
+                    value={email}
+                    type="email"
+                    onChange={onChangeEmail}
                     required
                 ></Input>
             </div>
             <div>
-                <label htmlFor="user-password">아이디</label>
+                <label htmlFor="user-password">password</label>
                 <br />
                 <Input
+                    type="password"
                     name="user-password"
                     value={password}
                     onChange={onChangePassword}
@@ -46,7 +48,7 @@ function LoginForm() {
                 ></Input>
             </div>
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={isLoggingIn}>
+                <Button type="primary" htmlType="submit" loading={logInLoading}>
                     로그인
                 </Button>
                 <Link href="/signup">
