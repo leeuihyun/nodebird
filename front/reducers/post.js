@@ -1,7 +1,15 @@
 import { createAction, handleActions } from "redux-actions";
 
-const ADD_POST = "ADD_POST";
-export const addPost = createAction(ADD_POST);
+export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
+export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
+export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+
+export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
+export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
+export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
+
+export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
+export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 
 const dummyPost = {
     id: 2,
@@ -49,17 +57,54 @@ const initialState = {
                 },
             ],
             imagePaths: [],
-            postAdded: false,
+            addPostLoading: false,
+            addPostDone: false,
+            addPostError: false,
+            addCommentLoading: false,
+            addCommentDone: false,
+            addCommentError: false,
         },
     ],
 };
 
 const post = handleActions(
     {
-        [ADD_POST]: (state) => ({
+        [ADD_POST_REQUEST]: (state) => ({
+            ...state,
+            addPostLoading: true,
+            addPostDone: false,
+            addPostError: null,
+        }),
+        [ADD_POST_SUCCESS]: (state) => ({
             ...state,
             mainPosts: [dummyPost, ...state.mainPosts],
-            postAdded: true,
+            addPostLoading: false,
+            addPostDone: true,
+        }),
+        [ADD_POST_FAILURE]: (state, action) => ({
+            ...state,
+            addPostLoading: false,
+            addPostDone: false,
+            addPostError: action.err,
+        }),
+        [ADD_COMMENT_REQUEST]: (state) => ({
+            ...state,
+            mainPosts: [dummyPost, ...state.mainPosts],
+            addCommentLoading: true,
+            addCommentDone: false,
+            addCommentError: null,
+        }),
+        [ADD_COMMENT_SUCCESS]: (state) => ({
+            ...state,
+            mainPosts: [dummyPost, ...state.mainPosts],
+            addCommentLoading: false,
+            addCommentDone: true,
+        }),
+        [ADD_COMMENT_FAILURE]: (state, action) => ({
+            ...state,
+            addCommentLoading: false,
+            addCommentDone: false,
+            addCommentError: action.err,
         }),
     },
     initialState
