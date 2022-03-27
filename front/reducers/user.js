@@ -54,9 +54,9 @@ const dummyUser = (data) => ({
     nickname: "Vanc",
     Posts: [{ id: 1 }],
     Followings: [
-        { nickname: "부기초" },
-        { nickname: "Chanho Lee" },
-        { nickname: "neue zeal" },
+        { nickname: "following1" },
+        { nickname: "following2" },
+        { nickname: "following3" },
     ],
     Followers: [
         { nickname: "부기초" },
@@ -76,11 +76,13 @@ const user = handleActions(
             ...state,
             logInLoading: false,
             logInDone: true,
+            logInError: null,
             user: dummyUser(action.payload),
         }),
-        [LOG_IN_FAILURE]: (state) => ({
+        [LOG_IN_FAILURE]: (state, action) => ({
             ...state,
             logInLoading: false,
+            logInError: action.payload,
         }),
         [LOG_OUT_REQUEST]: (state) => ({
             ...state,

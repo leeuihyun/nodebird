@@ -11,16 +11,16 @@ export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 
-const dummyPost = {
+const dummyPost = (data) => ({
     id: 2,
-    content: "더미데이터입니다.",
+    content: data.content,
     User: {
         id: 1,
         nickname: "Vanc",
     },
     Images: [],
     Comments: [],
-};
+});
 
 const initialState = {
     mainPosts: [
@@ -69,15 +69,15 @@ const initialState = {
 
 const post = handleActions(
     {
-        [ADD_POST_REQUEST]: (state) => ({
+        [ADD_POST_REQUEST]: (state, action) => ({
             ...state,
             addPostLoading: true,
             addPostDone: false,
             addPostError: null,
         }),
-        [ADD_POST_SUCCESS]: (state) => ({
+        [ADD_POST_SUCCESS]: (state, action) => ({
             ...state,
-            mainPosts: [dummyPost, ...state.mainPosts],
+            mainPosts: [dummyPost(action.data), ...state.mainPosts],
             addPostLoading: false,
             addPostDone: true,
             addPostError: null,

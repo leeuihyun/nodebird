@@ -3,9 +3,12 @@ import { Form, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { addPost } from "../reducers/post";
 import useInput from "../hooks/useInput";
+import { ADD_POST_REQUEST } from "../reducers/post";
 
 function PostForm() {
-    const { addPostDone, imagePaths } = useSelector((state) => state.post);
+    const { addPostDone, imagePaths, addPostLoading } = useSelector(
+        (state) => state.post
+    );
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput("");
     useEffect(() => {
@@ -14,9 +17,11 @@ function PostForm() {
         }
     }, [addPostDone]);
     const onSubmitForm = useCallback(() => {
-        dispatch(addPost());
-        setText("");
-    }, []);
+        dispatch({
+            type: ADD_POST_REQUEST,
+            data: text,
+        });
+    }, [text]);
     const imageRef = useRef();
 
     const onClickImageUpload = useCallback(() => {

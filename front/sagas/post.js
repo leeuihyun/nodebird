@@ -22,7 +22,9 @@ function* addPost(action) {
         yield delay(1000);
         yield put({
             type: ADD_POST_SUCCESS,
-            //payload: res.data;
+            data: {
+                content: action.data,
+            },
         });
     } catch (err) {
         console.log(err);
