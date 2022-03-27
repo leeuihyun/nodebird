@@ -4,13 +4,18 @@ import AppLayout from "../components/AppLayout";
 import { Form, Input, Checkbox, Button } from "antd";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
+import { useSelector, useDispatch } from "react-redux";
+import { SIGN_UP_REQUEST } from "../reducers/user";
 
 const ErrorMessage = styled.div`
     color: red;
 `;
 const Signup = () => {
+    const dispatch = useDispatch();
+    const { signUpLoading } = useSelector((state) => state.user);
+
     const [nickname, onChangeNickname] = useInput("");
-    const [id, onChangeId] = useInput("");
+    const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");
 
     const [term, setTerm] = useState("");
@@ -36,7 +41,10 @@ const Signup = () => {
         if (!term) {
             return setTermError(true);
         }
-        alert("회원가입성공!");
+        dispatch({
+            type: SIGN_UP_REQUEST,
+            data: { email, password },
+        });
     }, [password, passwordCheck, term]);
     return (
         <>
@@ -55,12 +63,13 @@ const Signup = () => {
                         ></Input>
                     </div>
                     <div>
-                        <label htmlFor="id">아이디</label>
+                        <label htmlFor="email">이메일</label>
                         <Input
-                            name="id"
+                            name="email"
                             required
-                            onChange={onChangeId}
-                            value={id}
+                            onChange={onChangeEmail}
+                            value={email}
+                            type="email"
                         ></Input>
                     </div>
                     <div>
@@ -99,7 +108,11 @@ const Signup = () => {
                         )}
                     </div>
                     <div style={{ marginTop: 10 }}>
-                        <Button type="primary" htmlType="submit">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            loading={signUpLoading}
+                        >
                             회원가입
                         </Button>
                     </div>
