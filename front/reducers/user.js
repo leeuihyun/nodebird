@@ -20,8 +20,16 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
+export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
+export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
+export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
+
 export const logInRequest = createAction(LOG_IN_REQUEST, (data) => data);
 export const logOutRequest = createAction(LOG_OUT_REQUEST);
+export const changeNickname = createAction(
+    CHANGE_NICKNAME_REQUEST,
+    (data) => data
+);
 
 const initialState = {
     logInLoading: false, //로그인 시도중
@@ -33,6 +41,9 @@ const initialState = {
     signUpLoading: false, //회원가입 시도중
     signUpDone: false, //회원가입 완료
     signUpError: null,
+    changeNicknameLoading: false,
+    changeNicknameDone: false,
+    changeNicknameError: null,
     user: null,
     signUpdata: {},
     loginData: {},
@@ -107,6 +118,20 @@ const user = handleActions(
             ...state,
             signUpLoading: false,
             signUpError: action.error,
+        }),
+        [CHANGE_NICKNAME_REQUEST]: (state, action) => ({
+            ...state,
+            changeNicknameLoading: true,
+        }),
+        [CHANGE_NICKNAME_SUCCESS]: (state, action) => ({
+            ...state,
+            changeNicknameLoading: false,
+            changeNicknameDone: true,
+            changeNicknameError: null,
+        }),
+        [CHANGE_NICKNAME_FAILURE]: (state, action) => ({
+            ...state,
+            changeNicknameLoading: true,
         }),
     },
     initialState

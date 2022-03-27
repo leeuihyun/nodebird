@@ -80,12 +80,13 @@ const post = handleActions(
             mainPosts: [dummyPost, ...state.mainPosts],
             addPostLoading: false,
             addPostDone: true,
+            addPostError: null,
         }),
         [ADD_POST_FAILURE]: (state, action) => ({
             ...state,
             addPostLoading: false,
             addPostDone: false,
-            addPostError: action.err,
+            addPostError: action.response.error,
         }),
         [ADD_COMMENT_REQUEST]: (state) => ({
             ...state,
