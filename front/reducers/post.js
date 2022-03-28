@@ -1,4 +1,5 @@
 import { createAction, handleActions } from "redux-actions";
+import shortId from "shortid";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -12,7 +13,7 @@ export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 
 const dummyPost = (data) => ({
-    id: 2,
+    id: shortId.generate(), //data.id
     content: data.content,
     User: {
         id: 1,
@@ -22,6 +23,14 @@ const dummyPost = (data) => ({
     Comments: [],
 });
 
+const dummyComment = (data) => ({
+    id: shortId.generate(),
+    content: data.content,
+    User: {
+        id: 1,
+        nickname: "vanc",
+    },
+});
 const initialState = {
     mainPosts: [
         {
@@ -96,6 +105,8 @@ const post = handleActions(
             addCommentError: null,
         }),
         [ADD_COMMENT_SUCCESS]: (state) => ({
+            //data.content , postId,userId
+            //const postIndex = state.mainPosts.findIndex((v) => v.id === action.postId);
             ...state,
             mainPosts: [dummyPost, ...state.mainPosts],
             addCommentLoading: false,
