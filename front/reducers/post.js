@@ -9,6 +9,9 @@ export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
+export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
+export const REMOVE_POST_TO_ME = "REMOVE_POST_OF_ME";
+
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 
@@ -28,9 +31,10 @@ const dummyComment = (data) => ({
     content: data.content,
     User: {
         id: 1,
-        nickname: "vanc",
+        nickname: "Vanc",
     },
 });
+
 const initialState = {
     mainPosts: [
         {
@@ -42,24 +46,31 @@ const initialState = {
             content: "첫번째 게시물 #해시태그1 #해시태그2",
             Images: [
                 {
+                    id: shortId.generate(),
                     src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
                 },
                 {
+                    id: shortId.generate(),
                     src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
                 },
                 {
+                    id: shortId.generate(),
                     src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
                 },
             ],
             Comments: [
                 {
+                    id: shortId.generate(),
                     User: {
+                        id: shortId.generate(),
                         nickname: "nero",
                     },
                     content: "리액트의 더미데이터를 이용하는 거군요~",
                 },
                 {
+                    id: shortId.generate(),
                     User: {
+                        id: shortId.generate(),
                         nickname: "second",
                     },
                     content: "리액트란 이런 거구나..!",
@@ -104,14 +115,22 @@ const post = handleActions(
             addCommentDone: false,
             addCommentError: null,
         }),
-        [ADD_COMMENT_SUCCESS]: (state) => ({
+        [ADD_COMMENT_SUCCESS]: (state) => {
             //data.content , postId,userId
-            //const postIndex = state.mainPosts.findIndex((v) => v.id === action.postId);
-            ...state,
-            mainPosts: [dummyPost, ...state.mainPosts],
-            addCommentLoading: false,
-            addCommentDone: true,
-        }),
+            const postIndex = state.mainPosts.findIndex(
+                (v) => v.id === action.postId
+            );
+            const post = { ...state.mainPosts[postIndex] };
+            const Comments = [dummyComment(action.data), ...post.Comments];
+            const mainPosts = [...state.mainPosts];
+            mainPosts[postIndex] = post;
+            return {
+                ...state,
+                mainPosts: [dummyPost, ...state.mainPosts],
+                addCommentLoading: false,
+                addCommentDone: true,
+            };
+        },
         [ADD_COMMENT_FAILURE]: (state, action) => ({
             ...state,
             addCommentLoading: false,
