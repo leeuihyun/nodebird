@@ -24,6 +24,9 @@ export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
 export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
 export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 
+export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
+export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
+
 export const logInRequest = createAction(LOG_IN_REQUEST, (data) => data);
 export const logOutRequest = createAction(LOG_OUT_REQUEST);
 export const changeNickname = createAction(
@@ -51,6 +54,7 @@ const initialState = {
 
 const dummyUser = (data) => ({
     ...data,
+    id: 1,
     nickname: "Vanc",
     Posts: [{ id: 1 }],
     Followings: [
@@ -134,6 +138,22 @@ const user = handleActions(
         [CHANGE_NICKNAME_FAILURE]: (state, action) => ({
             ...state,
             changeNicknameLoading: true,
+        }),
+        [ADD_POST_TO_ME]: (state, action) => ({
+            ...state,
+            user: {
+                ...state.user,
+                Posts: [{ id: action.data }, ...state.user.Posts],
+            },
+        }),
+        [REMOVE_POST_OF_ME]: (state, action) => ({
+            ...state,
+            user: {
+                ...state.user,
+                Posts: state.user.Posts.filter(
+                    (item) => item.id !== action.data
+                ),
+            },
         }),
     },
     initialState
