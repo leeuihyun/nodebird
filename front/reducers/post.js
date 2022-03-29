@@ -9,14 +9,15 @@ export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
-export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
-export const REMOVE_POST_TO_ME = "REMOVE_POST_OF_ME";
+export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
+export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
+export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 
 const dummyPost = (data) => ({
-    id: shortId.generate(), //data.id
+    id: data.id,
     content: data.content,
     User: {
         id: 1,
@@ -80,6 +81,9 @@ const initialState = {
             addPostLoading: false,
             addPostDone: false,
             addPostError: false,
+            removePostLoading: false,
+            removePostDone: false,
+            removePostError: false,
             addCommentLoading: false,
             addCommentDone: false,
             addCommentError: false,
@@ -133,9 +137,28 @@ const post = handleActions(
         },
         [ADD_COMMENT_FAILURE]: (state, action) => ({
             ...state,
-            addCommentLoading: false,
-            addCommentDone: false,
-            addCommentError: action.err,
+            removeCommentLoading: false,
+            removeCommentDone: false,
+            removeCommentError: action.err,
+        }),
+        [REMOVE_POST_REQUEST]: (state, action) => ({
+            ...state,
+            removePostLoading: true,
+            removePostDone: false,
+            removePostError: null,
+        }),
+        [REMOVE_POST_SUCCESS]: (state, action) => ({
+            ...state,
+            mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+            removePostLoading: false,
+            removePostDone: true,
+            removePostError: null,
+        }),
+        [REMOVE_POST_FAILURE]: (state, action) => ({
+            ...state,
+            addPostLoading: false,
+            addPostDone: false,
+            addPostError: action.response.error,
         }),
     },
     initialState
