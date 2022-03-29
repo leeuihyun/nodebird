@@ -46,7 +46,7 @@ function PostCard({ post }) {
                     />,
                     <MessageOutlined key="comment" onClick={onToggleForm} />,
                     <Popover
-                        key="more"
+                        key="ellipsis"
                         content={
                             <Button.Group>
                                 {id && post.User.id === id ? (
@@ -77,12 +77,14 @@ function PostCard({ post }) {
                 />
             </Card>
             {commentFormOpened && (
-                <div>
+                <>
                     <CommentForm post={post}></CommentForm>
                     <List
-                        header={`${post.Comments.length}개의 댓글`}
+                        header={`${
+                            post.Comments ? post.Comments.length : 0
+                        }개의 댓글`}
                         itemLayout="horizontal"
-                        dataSource={post.Comments}
+                        dataSource={post.Comments || []}
                         renderItem={(item) => (
                             <li>
                                 <Comment
@@ -95,7 +97,7 @@ function PostCard({ post }) {
                             </li>
                         )}
                     ></List>
-                </div>
+                </>
             )}
         </div>
     );

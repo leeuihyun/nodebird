@@ -1,5 +1,6 @@
 import { createAction, handleActions } from "redux-actions";
 import shortId from "shortid";
+import produce from "immer";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -93,7 +94,8 @@ const initialState = {
 
 const post = handleActions(
     {
-        [ADD_POST_REQUEST]: (state, action) => ({
+        //spreaad 연산자를 이용한 것.
+        /*[ADD_POST_REQUEST]: (state, action) => ({
             ...state,
             addPostLoading: true,
             addPostDone: false,
@@ -114,12 +116,11 @@ const post = handleActions(
         }),
         [ADD_COMMENT_REQUEST]: (state) => ({
             ...state,
-            mainPosts: [dummyPost, ...state.mainPosts],
             addCommentLoading: true,
             addCommentDone: false,
             addCommentError: null,
         }),
-        [ADD_COMMENT_SUCCESS]: (state) => {
+        [ADD_COMMENT_SUCCESS]: (state, action) => {
             //data.content , postId,userId
             const postIndex = state.mainPosts.findIndex(
                 (v) => v.id === action.postId
@@ -134,7 +135,42 @@ const post = handleActions(
                 addCommentLoading: false,
                 addCommentDone: true,
             };
-        },
+        },*/
+        [ADD_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addPostLoading = true;
+                draft.addPostDone = false;
+                draft.addPostError = null;
+            }),
+        [ADD_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.mainPosts.unshift(dummyPost(action.data));
+                draft.addPostLoading = false;
+                draft.addPostDone = true;
+                draft.addPostError = null;
+            }),
+        [ADD_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addPostLoading = false;
+                draft.addPostDone = false;
+                draft.addPostError = action.response.data;
+            }),
+        [ADD_COMMENT_REQUEST]: (state) =>
+            produce(state, (draft) => {
+                draft.addCommentLoading = true;
+                draft.addCommentDone = false;
+                draft.addCommentError = null;
+            }),
+        [ADD_COMMENT_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                const post = draft.mainPosts.find(
+                    (v) => v.id === action.data.postId
+                );
+                post.Comments.unshift(dummyComment(action.data)); //unshift 맨앞에 추가하는 것.
+                draft.addCommentLoading = false;
+                draft.addCommentDone = true;
+            }),
+
         [ADD_COMMENT_FAILURE]: (state, action) => ({
             ...state,
             removeCommentLoading: false,
