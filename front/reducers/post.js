@@ -15,6 +15,10 @@ export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
 export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
+export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
+export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
+export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
+
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 
@@ -38,63 +42,8 @@ const dummyComment = (data) => ({
     },
 });
 
-const initialState = {
-    mainPosts: [
-        {
-            id: 1,
-            User: {
-                id: 1,
-                nickname: "Vanc",
-            },
-            content: "첫번째 게시물 #해시태그1 #해시태그2",
-            Images: [
-                {
-                    id: shortId.generate(),
-                    src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
-                },
-                {
-                    id: shortId.generate(),
-                    src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
-                },
-                {
-                    id: shortId.generate(),
-                    src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
-                },
-            ],
-            Comments: [
-                {
-                    id: shortId.generate(),
-                    User: {
-                        id: shortId.generate(),
-                        nickname: "nero",
-                    },
-                    content: "리액트의 더미데이터를 이용하는 거군요~",
-                },
-                {
-                    id: shortId.generate(),
-                    User: {
-                        id: shortId.generate(),
-                        nickname: "second",
-                    },
-                    content: "리액트란 이런 거구나..!",
-                },
-            ],
-            imagePaths: [],
-            addPostLoading: false,
-            addPostDone: false,
-            addPostError: false,
-            removePostLoading: false,
-            removePostDone: false,
-            removePostError: false,
-            addCommentLoading: false,
-            addCommentDone: false,
-            addCommentError: false,
-        },
-    ],
-};
-
-initialState.mainPosts = initialState.mainPosts.concat(
-    Array(20)
+export const generateDummyPost = (number) =>
+    Array(number)
         .fill()
         .map(() => ({
             id: shortId.generate(),
@@ -117,8 +66,25 @@ initialState.mainPosts = initialState.mainPosts.concat(
                     content: faker.lorem.sentence(),
                 },
             ],
-        }))
-);
+        }));
+const initialState = {
+    mainPosts: [],
+    imagePaths: [],
+    hasMorePost: true, //게시글을 몇개만 볼지 ?
+    addPostLoading: false,
+    addPostDone: false,
+    addPostError: null,
+    removePostLoading: false,
+    removePostDone: false,
+    removePostError: null,
+    addCommentLoading: false,
+    addCommentDone: false,
+    addCommentError: null,
+    loadPostLoading: false,
+    loadPostDone: false,
+    loadPostError: null,
+};
+
 const post = handleActions(
     {
         //spreaad 연산자를 이용한 것.
@@ -180,7 +146,7 @@ const post = handleActions(
             produce(state, (draft) => {
                 draft.addPostLoading = false;
                 draft.addPostDone = false;
-                draft.addPostError = action.response.data;
+                draft.addPostError = action.error;
             }),
         [ADD_COMMENT_REQUEST]: (state) =>
             produce(state, (draft) => {
@@ -202,7 +168,7 @@ const post = handleActions(
             ...state,
             removeCommentLoading: false,
             removeCommentDone: false,
-            removeCommentError: action.err,
+            removeCommentError: action.error,
         }),
         [REMOVE_POST_REQUEST]: (state, action) => ({
             ...state,
@@ -221,8 +187,28 @@ const post = handleActions(
             ...state,
             addPostLoading: false,
             addPostDone: false,
-            addPostError: action.response.error,
+            addPostError: action.error,
         }),
+        [LOAD_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [LOAD_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.loadPostError = null;
+                draft.mainPosts = action.data.concat(draft.mainPosts);
+                draft.hasMorePost = draft.mainPosts.length < 50;
+            }),
+        [LOAD_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostDone = false;
+                draft.loadPostError = action.error;
+            }),
     },
     initialState
 );
