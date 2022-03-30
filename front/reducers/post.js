@@ -1,6 +1,7 @@
 import { createAction, handleActions } from "redux-actions";
 import shortId from "shortid";
 import produce from "immer";
+import faker from "faker";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -92,6 +93,32 @@ const initialState = {
     ],
 };
 
+initialState.mainPosts = initialState.mainPosts.concat(
+    Array(20)
+        .fill()
+        .map(() => ({
+            id: shortId.generate(),
+            User: {
+                id: shortId.generate(),
+                nickname: faker.name.findName(),
+            },
+            content: faker.lorem.paragraph(),
+            Images: [
+                {
+                    src: faker.image.image(),
+                },
+            ],
+            Comments: [
+                {
+                    User: {
+                        id: shortId.generate(),
+                        nickname: faker.name.findName(),
+                    },
+                    content: faker.lorem.sentence(),
+                },
+            ],
+        }))
+);
 const post = handleActions(
     {
         //spreaad 연산자를 이용한 것.
