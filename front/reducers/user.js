@@ -128,6 +128,8 @@ const user = handleActions(
         [CHANGE_NICKNAME_REQUEST]: (state, action) => ({
             ...state,
             changeNicknameLoading: true,
+            changeNicknameDone: false,
+            changeNicknameError: null,
         }),
         [CHANGE_NICKNAME_SUCCESS]: (state, action) => ({
             ...state,
