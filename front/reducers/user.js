@@ -1,3 +1,4 @@
+import produce from "immer";
 import { createAction, handleActions } from "redux-actions";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
@@ -47,6 +48,12 @@ const initialState = {
     changeNicknameLoading: false,
     changeNicknameDone: false,
     changeNicknameError: null,
+    followLoading: false,
+    followDone: false,
+    followError: null,
+    unFollowLoading: false,
+    unFollowDone: false,
+    unFollowError: null,
     user: null,
     signUpdata: {},
     loginData: {},
@@ -157,6 +164,46 @@ const user = handleActions(
                 ),
             },
         }),
+        [FOLLOW_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.followLoading = true;
+                draft.followDone = false;
+                draft.followError = null;
+            }),
+        [FOLLOW_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Followings.push({ id: action.data }); //이름 같은 다른 정보도 들어갈 수 있기 때문에 객체로 처음에 설정해놨었음
+                draft.followLoading = false;
+                draft.followDone = true;
+                draft.followError = null;
+            }),
+        [FOLLOW_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.followLoading = false;
+                draft.followDone = false;
+                draft.followError = action.error;
+            }),
+        [UNFOLLOW_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.unFollowLoading = true;
+                draft.unFollowDone = false;
+                draft.unFollowError = null;
+            }),
+        [UNFOLLOW_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Followings = draft.user.Followings.filter(
+                    (item) => item.id !== action.data
+                );
+                draft.unFollowLoading = false;
+                draft.unFollowDone = true;
+                draft.unFollowError = null;
+            }),
+        [UNFOLLOW_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.unFollowLoading = false;
+                draft.unFollowDone = false;
+                draft.unFollowError = action.error;
+            }),
     },
     initialState
 );
