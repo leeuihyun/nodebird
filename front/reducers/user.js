@@ -114,14 +114,14 @@ const user = handleActions(
             logOutLoading: false,
             logoutError: action.error,
         }),
-        [SIGN_UP_REQUEST]: (state) => ({
+        [SIGN_UP_REQUEST]: (state, action) => ({
             ...state,
             signUpLoading: true,
             signUpDone: false,
             signUpError: null,
             user: null,
         }),
-        [SIGN_UP_SUCCESS]: (state) => ({
+        [SIGN_UP_SUCCESS]: (state, action) => ({
             ...state,
             signUpDone: true,
             signUpLoading: false,
