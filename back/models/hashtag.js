@@ -1,21 +1,26 @@
-module.exports = (sequelize, DataTypes) => {
-    const Hashtag = sequelize.define(
-        "Hashtag",
-        {
-            // Mysql에는 users 테이블(모델) 테이블 생성
-            //id: {}, id가 기본적으로 mysql에 들어있음 1,..2..3..4.
-            name: {
-                type: DataTypes.STRING(20),
-                allowNull: false,
+const DataTypes = require("sequelize");
+const { Model } = DataTypes;
+
+module.exports = class Hashtag extends Model {
+    static init(sequelize) {
+        return super.init(
+            {
+                // id가 기본적으로 들어있다.
+                name: {
+                    type: DataTypes.STRING(20),
+                    allowNull: false,
+                },
             },
-        },
-        {
-            charset: "utf8mb4",
-            collate: "utf8mb4-general-ci", //한글save
-        }
-    );
-    Hashtag.associate = (db) => {
+            {
+                modelName: "Hashtag",
+                tableName: "hashtags",
+                charset: "utf8mb4",
+                collate: "utf8mb4_general_ci", // 이모티콘 저장
+                sequelize,
+            }
+        );
+    }
+    static associate(db) {
         db.Hashtag.belongsToMany(db.Post, { through: "PostHashtag" });
-    };
-    return Hashtag;
+    }
 };
