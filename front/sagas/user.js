@@ -19,13 +19,13 @@ import {
 import axios from "axios";
 
 function logInApi(data) {
-    return axios.post("/login/api");
+    return axios.post("/user/login", data);
 }
 function logOutApi(data) {
-    return axios.post("/login/api");
+    return axios.post("/user/logout");
 }
 function signUpApi(data) {
-    return axios.post("http://localhost:3065/user", data);
+    return axios.post("/user", data);
 }
 function followApi(data) {
     return axios.post("/follow/api");
@@ -37,14 +37,14 @@ function unFollowApi(data) {
 //login
 function* logIn(action) {
     try {
-        //const res = yield call(logInApi, action.data);
-        yield delay(1000);
+        const res = yield call(logInApi, action.data);
+        //yield delay(1000); // 서버와 연동하기 전 비동기 작업을 구현하기 위함 redux는 동기적이기 때문이다.
         yield put({
             type: LOG_IN_SUCCESS,
-            //payload: res.data,
+            data: res.data,
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         yield put({
             type: LOG_IN_FAILURE,
             error: err.response.data,

@@ -37,13 +37,6 @@ const Signup = () => {
         }
     }, [signUpError]);
 
-    useEffect(() => {
-        if (signUpDone) {
-            dispatch({
-                type: SIGN_UP_RESET,
-            });
-        }
-    });
     const onChangeTerm = useCallback((e) => {
         setTerm(e.target.checked);
         setTermError(false);
