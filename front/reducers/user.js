@@ -13,6 +13,8 @@ export const SIGN_UP_REQUEST = "SIGN_UP_REQUEST";
 export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
 export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
 
+export const SIGN_UP_RESET = "SIGN_UP_RESET";
+
 export const FOLLOW_REQUEST = "FOLLOW_REQUEST";
 export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
 export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
@@ -203,6 +205,12 @@ const user = handleActions(
                 draft.unFollowLoading = false;
                 draft.unFollowDone = false;
                 draft.unFollowError = action.error;
+            }),
+        [SIGN_UP_RESET]: (state, action) =>
+            produce(state, (draft) => {
+                draft.signUpDone = false;
+                draft.signUpError = null;
+                draft.signUpLoading = false;
             }),
     },
     initialState

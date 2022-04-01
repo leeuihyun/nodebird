@@ -5,7 +5,7 @@ import { Form, Input, Checkbox, Button } from "antd";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { useSelector, useDispatch } from "react-redux";
-import { SIGN_UP_REQUEST } from "../reducers/user";
+import { SIGN_UP_REQUEST, SIGN_UP_RESET } from "../reducers/user";
 
 import Router from "next/router";
 const ErrorMessage = styled.div`
@@ -13,7 +13,9 @@ const ErrorMessage = styled.div`
 `;
 const Signup = () => {
     const dispatch = useDispatch();
-    const { signUpLoading, signUpDone } = useSelector((state) => state.user);
+    const { signUpLoading, signUpDone, signUpError } = useSelector(
+        (state) => state.user
+    );
 
     const [nickname, onChangeNickname] = useInput("");
     const [email, onChangeEmail] = useInput("");
@@ -28,6 +30,20 @@ const Signup = () => {
             Router.push("/");
         }
     }, [signUpDone]);
+
+    useEffect(() => {
+        if (signUpError) {
+            alert(signUpError);
+        }
+    }, [signUpError]);
+
+    useEffect(() => {
+        if (signUpDone) {
+            dispatch({
+                type: SIGN_UP_RESET,
+            });
+        }
+    });
     const onChangeTerm = useCallback((e) => {
         setTerm(e.target.checked);
         setTermError(false);
