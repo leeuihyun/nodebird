@@ -18,7 +18,7 @@ import {
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import shortId from "shortid";
 function addPostApi(data) {
-    return axios.post("/post", data);
+    return axios.post("/post", { content: data });
 }
 function addCommentApi(data) {
     return axios.post(`/post/${data.postId}/comment`, data);
