@@ -22,7 +22,7 @@ function PostForm() {
         }
         return dispatch({
             type: ADD_POST_REQUEST,
-            data: { content: text }, //이렇게 하니까 mysql에 들어가긴한다,.,/./.????
+            data: text,
         });
     }, [text]);
     const imageRef = useRef();
