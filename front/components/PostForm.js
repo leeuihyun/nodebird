@@ -17,9 +17,12 @@ function PostForm() {
         }
     }, [addPostDone]);
     const onSubmitForm = useCallback(() => {
-        dispatch({
+        if (!text || !text.trim()) {
+            return alert("게시글을 작성하세요.");
+        }
+        return dispatch({
             type: ADD_POST_REQUEST,
-            data: text,
+            data: { content: text }, //이렇게 하니까 mysql에 들어가긴한다,.,/./.????
         });
     }, [text]);
     const imageRef = useRef();

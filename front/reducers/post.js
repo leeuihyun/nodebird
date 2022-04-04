@@ -21,7 +21,7 @@ export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
 
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
-
+/*
 const dummyPost = (data) => ({
     id: data.id,
     content: data.content,
@@ -41,7 +41,7 @@ const dummyComment = (data) => ({
         nickname: "Vanc",
     },
 });
-
+*/
 export const generateDummyPost = (number) =>
     Array(number)
         .fill()
@@ -137,7 +137,7 @@ const post = handleActions(
             }),
         [ADD_POST_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.mainPosts.unshift(dummyPost(action.data));
+                draft.mainPosts.unshift(action.data);
                 draft.addPostLoading = false;
                 draft.addPostDone = true;
                 draft.addPostError = null;
@@ -159,7 +159,7 @@ const post = handleActions(
                 const post = draft.mainPosts.find(
                     (v) => v.id === action.data.postId
                 );
-                post.Comments.unshift(dummyComment(action.data)); //unshift 맨앞에 추가하는 것.
+                post.Comments.unshift(action.data); //unshift 맨앞에 추가하는 것.
                 draft.addCommentLoading = false;
                 draft.addCommentDone = true;
             }),

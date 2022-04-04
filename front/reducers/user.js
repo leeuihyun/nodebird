@@ -28,6 +28,10 @@ export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
 
+export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
+export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
+export const LOAD_USER_FAILURE = "LOAD_USER_FAILURE";
+
 export const logInRequest = createAction(LOG_IN_REQUEST, (data) => data);
 export const logOutRequest = createAction(LOG_OUT_REQUEST);
 export const changeNickname = createAction(
@@ -36,6 +40,9 @@ export const changeNickname = createAction(
 );
 
 const initialState = {
+    loadUserLoading: false,
+    loadUserDone: false,
+    loadUserError: null,
     logInLoading: false, //로그인 시도중
     logInDone: false,
     logInError: null,
@@ -59,22 +66,6 @@ const initialState = {
     loginData: {},
 };
 
-const dummyUser = (data) => ({
-    ...data,
-    id: 1,
-    nickname: "Vanc",
-    Posts: [{ id: 1 }],
-    Followings: [
-        { nickname: "following1" },
-        { nickname: "following2" },
-        { nickname: "following3" },
-    ],
-    Followers: [
-        { nickname: "부기초" },
-        { nickname: "Chanho Lee" },
-        { nickname: "neue zeal" },
-    ],
-});
 const user = handleActions(
     {
         [LOG_IN_REQUEST]: (state, action) => ({
@@ -147,13 +138,10 @@ const user = handleActions(
             ...state,
             changeNicknameLoading: true,
         }),
-        [ADD_POST_TO_ME]: (state, action) => ({
-            ...state,
-            user: {
-                ...state.user,
-                Posts: [{ id: action.data }, ...state.user.Posts],
-            },
-        }),
+        [ADD_POST_TO_ME]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Posts.unshift({ id: action.data });
+            }),
         [REMOVE_POST_OF_ME]: (state, action) => ({
             ...state,
             user: {
@@ -202,6 +190,25 @@ const user = handleActions(
                 draft.unFollowLoading = false;
                 draft.unFollowDone = false;
                 draft.unFollowError = action.error;
+            }),
+        [LOAD_USER_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadUserLoading = true;
+                draft.loadUserDone = false;
+                draft.loadUserError = null;
+            }),
+        [LOAD_USER_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user = action.data;
+                draft.loadUserLoading = false;
+                draft.loadUserDone = true;
+                draft.loadUserError = null;
+            }),
+        [LOAD_USER_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadUserLoading = false;
+                draft.loadUserDone = false;
+                draft.loadUserError = action.error;
             }),
     },
     initialState
