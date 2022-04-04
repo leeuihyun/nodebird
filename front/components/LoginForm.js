@@ -6,6 +6,7 @@ import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
 import { LOG_IN_REQUEST } from "../reducers/user";
+import { useEffect } from "react";
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -18,7 +19,7 @@ function LoginForm() {
     const [email, onChangeEmail, setEmail] = useInput("");
     const [password, onChangePassword, setPassword] = useInput("");
     const dispatch = useDispatch();
-    const { logInLoading } = useSelector((state) => state.user);
+    const { logInLoading, logInError } = useSelector((state) => state.user);
     const onSubmitForm = useCallback(() => {
         console.log(email, password);
         dispatch({
@@ -29,6 +30,11 @@ function LoginForm() {
             },
         });
     }, [email, password]);
+    useEffect(() => {
+        if (logInError) {
+            alert(logInError);
+        }
+    }, [logInError]);
     return (
         <FormWrapper onFinish={onSubmitForm}>
             <div>

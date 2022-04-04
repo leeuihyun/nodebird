@@ -57,13 +57,12 @@ function* watchLogIn() {
 }
 //logout
 
-function* logOut(action) {
+function* logOut() {
     try {
-        //const res = yield call(logoutApi, action.data);
-        yield delay(1000);
+        yield call(logOutApi);
+        //yield delay(1000);
         yield put({
             type: LOG_OUT_SUCCESS,
-            //payload: res.data,
         });
     } catch (err) {
         console.log(err);

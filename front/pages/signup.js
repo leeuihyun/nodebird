@@ -13,7 +13,7 @@ const ErrorMessage = styled.div`
 `;
 const Signup = () => {
     const dispatch = useDispatch();
-    const { signUpLoading, signUpDone, signUpError } = useSelector(
+    const { signUpLoading, signUpDone, signUpError, user } = useSelector(
         (state) => state.user
     );
 
@@ -25,6 +25,11 @@ const Signup = () => {
     const [termError, setTermError] = useState(false);
     const [passwordCheck, setPasswordCheck] = useState("");
     const [passwordError, setPasswordError] = useState(false);
+    useEffect(() => {
+        if (user && user.id) {
+            Router.replace("/");
+        }
+    });
     useEffect(() => {
         if (signUpDone) {
             Router.push("/");
