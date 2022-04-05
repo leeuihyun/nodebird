@@ -1,7 +1,7 @@
 import { createAction, handleActions } from "redux-actions";
-import shortId from "shortid";
+//import shortId from "shortid";
 import produce from "immer";
-import faker from "faker";
+//import faker from "faker";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -41,7 +41,7 @@ const dummyComment = (data) => ({
         nickname: "Vanc",
     },
 });
-*/
+
 export const generateDummyPost = (number) =>
     Array(number)
         .fill()
@@ -67,6 +67,7 @@ export const generateDummyPost = (number) =>
                 },
             ],
         }));
+        */
 const initialState = {
     mainPosts: [],
     imagePaths: [],
@@ -157,19 +158,17 @@ const post = handleActions(
         [ADD_COMMENT_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
                 const post = draft.mainPosts.find(
-                    (v) => v.id === action.data.postId
+                    (v) => v.id === action.data.PostId
                 );
                 post.Comments.unshift(action.data); //unshift 맨앞에 추가하는 것.
                 draft.addCommentLoading = false;
                 draft.addCommentDone = true;
             }),
-
-        [ADD_COMMENT_FAILURE]: (state, action) => ({
-            ...state,
-            removeCommentLoading: false,
-            removeCommentDone: false,
-            removeCommentError: action.error,
-        }),
+        [ADD_COMMENT_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addCommentLoading = false;
+                draft.addCommentError = action.error;
+            }),
         [REMOVE_POST_REQUEST]: (state, action) => ({
             ...state,
             removePostLoading: true,
@@ -199,14 +198,12 @@ const post = handleActions(
             produce(state, (draft) => {
                 draft.loadPostLoading = false;
                 draft.loadPostDone = true;
-                draft.loadPostError = null;
-                draft.mainPosts = action.data.concat(draft.mainPosts);
-                draft.hasMorePost = draft.mainPosts.length < 50;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePost = action.data.length === 10;
             }),
         [LOAD_POST_FAILURE]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadPostLoading = false;
-                draft.loadPostDone = false;
                 draft.loadPostError = action.error;
             }),
     },
