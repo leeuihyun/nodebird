@@ -6,7 +6,7 @@ import { PropTypes } from "prop-types";
 import { ADD_COMMENT_REQUEST } from "../reducers/post";
 
 function CommentForm({ post }) {
-    const { id } = useSelector((state) => state.user);
+    const id = useSelector((state) => state.user.user?.id);
     const { addCommentDone, addCommentLoading } = useSelector(
         (state) => state.post
     );
