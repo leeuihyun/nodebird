@@ -13,6 +13,10 @@ import {
     LOAD_POST_REQUEST,
     LOAD_POST_SUCCESS,
     LOAD_POST_FAILURE,
+    LIKE_POST_REQUEST,
+    UNLIKE_POST_REQUEST,
+    LIKE_POST_SUCCESS,
+    LIKE_POST_FAILURE,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 function addPostApi(data) {
@@ -102,6 +106,30 @@ function* loadPost(action) {
             error: err.response.data,
         });
     }
+}
+function* likePost(action) {
+    try {
+        const res = yield call(likePostApi, action.data);
+        yield put({
+            type: LIKE_POST_SUCCESS,
+            data: res.data,
+        });
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: LIKE_POST_FAILURE,
+            error: error.response.data,
+        });
+    }
+}
+
+function* watchLikePost() {
+    yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+function* unlikePost() {}
+
+function* watchUnlikePost() {
+    yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
 }
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);

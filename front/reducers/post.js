@@ -19,6 +19,14 @@ export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
 
+export const LIKE_POST_REQUEST = "LIKE_POST_REQUEST";
+export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
+export const LIKE_POST_FAILURE = "LIKE_POST_FAILURE";
+
+export const UNLIKE_POST_REQUEST = "UNLIKE_POST_REQUEST";
+export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
+export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
+
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 /*
@@ -84,6 +92,12 @@ const initialState = {
     loadPostLoading: false,
     loadPostDone: false,
     loadPostError: null,
+    likePostLoading: false,
+    likePostDone: false,
+    likePostError: null,
+    unlikePostLoading: false,
+    unlikePostDone: false,
+    unlikePostError: null,
 };
 
 const post = handleActions(
@@ -202,6 +216,42 @@ const post = handleActions(
                 draft.hasMorePost = action.data.length === 10;
             }),
         [LOAD_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.error;
+            }),
+        [LIKE_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [LIKE_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePost = action.data.length === 10;
+            }),
+        [LIKE_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.error;
+            }),
+        [UNLIKE_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [UNLIKE_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePost = action.data.length === 10;
+            }),
+        [UNLIKE_POST_FAILURE]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadPostLoading = false;
                 draft.loadPostError = action.error;

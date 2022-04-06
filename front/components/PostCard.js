@@ -15,16 +15,23 @@ import { REMOVE_POST_REQUEST } from "../reducers/post";
 import FollowButton from "./FollowButton";
 
 function PostCard({ post }) {
-    const [liked, setLiked] = useState(false);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const { removePostLoading } = useSelector((state) => state.post);
     const { user } = useSelector((state) => state.user);
 
     const dispatch = useDispatch();
-    const onToggleLike = useCallback(() => {
-        setLiked((prev) => !prev);
+    const onLike = useCallback(() => {
+        dispatch({
+            type: LIKE_POST_REQUEST,
+            data: post.id,
+        });
     }, []);
-
+    const onUnlike = useCallback(() => {
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data: post.id,
+        });
+    }, []);
     const onToggleForm = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []);
@@ -41,11 +48,19 @@ function PostCard({ post }) {
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
                     <RetweetOutlined key="retweet" />,
-                    <HeartOutlined
-                        key="heart"
-                        twoToneColor="#eb2f96"
-                        onClick={onToggleLike}
-                    />,
+                    liked ? (
+                        <HeartTwoTone
+                            twoToneColor="#eb2f96"
+                            key="heart"
+                            onClick={onUnlike}
+                        ></HeartTwoTone>
+                    ) : (
+                        <HeartOutlined
+                            key="heart"
+                            twoToneColor="#eb2f96"
+                            onClick={onLike}
+                        />
+                    ),
                     <MessageOutlined key="comment" onClick={onToggleForm} />,
                     <Popover
                         key="ellipsis"
