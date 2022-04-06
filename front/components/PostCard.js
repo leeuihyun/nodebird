@@ -5,13 +5,18 @@ import {
     HeartOutlined,
     MessageOutlined,
     RetweetOutlined,
+    HeartTwoTone,
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
-import { REMOVE_POST_REQUEST } from "../reducers/post";
+import {
+    LIKE_POST_REQUEST,
+    REMOVE_POST_REQUEST,
+    UNLIKE_POST_REQUEST,
+} from "../reducers/post";
 import FollowButton from "./FollowButton";
 
 function PostCard({ post }) {
@@ -42,6 +47,7 @@ function PostCard({ post }) {
         });
     }, []);
     const id = user && user.id;
+    const liked = post.Likers.find((v) => v.id === id);
     return (
         <div>
             <Card
@@ -128,6 +134,7 @@ PostCard.propTypes = {
         createdAt: PropTypes.string,
         Comments: PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.object),
+        Likers: PropTypes.arrayOf(PropTypes.object),
     }).isRequired,
 };
 export default PostCard;

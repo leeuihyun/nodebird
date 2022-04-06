@@ -14,10 +14,13 @@ import {
     LOAD_POST_SUCCESS,
     LOAD_POST_FAILURE,
     LIKE_POST_REQUEST,
-    UNLIKE_POST_REQUEST,
     LIKE_POST_SUCCESS,
     LIKE_POST_FAILURE,
+    UNLIKE_POST_REQUEST,
+    UNLIKE_POST_SUCCESS,
+    UNLIKE_POST_FAILURE,
 } from "../reducers/post";
+
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 function addPostApi(data) {
     return axios.post("/post", { content: data });
@@ -30,6 +33,12 @@ function removePostApi(data) {
 }
 function loadPostApi(data) {
     return axios.get("/posts", data);
+}
+function likePostApi(data) {
+    return axios.patch(`/post/${data}/like`);
+}
+function unlikePostApi(data) {
+    return axios.delete(`/post/${data}/unlike`);
 }
 function* addPost(action) {
     try {
@@ -126,7 +135,22 @@ function* likePost(action) {
 function* watchLikePost() {
     yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
-function* unlikePost() {}
+
+function* unlikePost(action) {
+    try {
+        const res = yield call(unlikePostApi, action.data);
+        yield put({
+            type: UNLIKE_POST_SUCCESS,
+            data: res.data,
+        });
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: UNLIKE_POST_FAILURE,
+            error: error.response.data,
+        });
+    }
+}
 
 function* watchUnlikePost() {
     yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
@@ -145,6 +169,8 @@ function* watchLoadPost() {
 }
 export default function* postSaga() {
     yield all([
+        fork(watchLikePost),
+        fork(watchUnlikePost),
         fork(watchAddPost),
         fork(watchAddComment),
         fork(watchRemovePost),

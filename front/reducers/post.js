@@ -222,39 +222,45 @@ const post = handleActions(
             }),
         [LIKE_POST_REQUEST]: (state, action) =>
             produce(state, (draft) => {
-                draft.loadPostLoading = true;
-                draft.loadPostDone = false;
-                draft.loadPostError = null;
+                draft.likePostLoading = true;
+                draft.likePostDone = false;
+                draft.likePostError = null;
             }),
         [LIKE_POST_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.loadPostLoading = false;
-                draft.loadPostDone = true;
-                draft.mainPosts = draft.mainPosts.concat(action.data);
-                draft.hasMorePost = action.data.length === 10;
+                const post = draft.mainPosts.find(
+                    (v) => v.id === action.data.PostId
+                );
+                post.Likers.push({ id: action.data.UserId });
+                draft.likePostLoading = false;
+                draft.likePostDone = true;
             }),
         [LIKE_POST_FAILURE]: (state, action) =>
             produce(state, (draft) => {
-                draft.loadPostLoading = false;
-                draft.loadPostError = action.error;
+                draft.likePostLoading = false;
+                draft.likePostError = action.error;
             }),
         [UNLIKE_POST_REQUEST]: (state, action) =>
             produce(state, (draft) => {
-                draft.loadPostLoading = true;
-                draft.loadPostDone = false;
-                draft.loadPostError = null;
+                draft.unlikePostLoading = true;
+                draft.unlikePostDone = false;
+                draft.unlikePostError = null;
             }),
         [UNLIKE_POST_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.loadPostLoading = false;
-                draft.loadPostDone = true;
-                draft.mainPosts = draft.mainPosts.concat(action.data);
-                draft.hasMorePost = action.data.length === 10;
+                const post = draft.mainPosts.find(
+                    (v) => v.id === action.data.PostId
+                );
+                post.Likers = post.Likers.filter(
+                    (v) => v.id !== action.data.UserId
+                );
+                draft.unlikePostLoading = false;
+                draft.unlikePostDone = true;
             }),
         [UNLIKE_POST_FAILURE]: (state, action) =>
             produce(state, (draft) => {
-                draft.loadPostLoading = false;
-                draft.loadPostError = action.error;
+                draft.unlikePostLoading = false;
+                draft.unlikePostError = action.error;
             }),
     },
     initialState
