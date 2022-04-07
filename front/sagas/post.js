@@ -29,7 +29,7 @@ function addCommentApi(data) {
     return axios.post(`/post/${data.postId}/comment`, data);
 }
 function removePostApi(data) {
-    return axios.post(`/post/${data.id}`, data);
+    return axios.delete(`/post/${data}`);
 }
 function loadPostApi(data) {
     return axios.get("/posts", data);
@@ -82,15 +82,15 @@ function* addComment(action) {
 
 function* removePost(action) {
     try {
-        //const res = yield call(removePostApi, action.data);
-        yield delay(1000);
+        const res = yield call(removePostApi, action.data);
+        //yield delay(1000);
         yield put({
             type: REMOVE_POST_SUCCESS,
-            data: action.data,
+            data: res.data,
         });
         yield put({
             type: REMOVE_POST_OF_ME,
-            data: action.data,
+            data: res.data,
         });
     } catch (err) {
         console.log(err);
