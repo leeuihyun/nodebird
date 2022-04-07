@@ -131,35 +131,7 @@ router.patch("/nickname", isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
-router.patch("/:userId/follow", async (req, res, next) => {
-    //follow
-    try {
-        const user = await User.findOne({ where: { id: req.params.userId } });
-        if (!user) {
-            return res.status(403).send("유령이네요");
-        }
-        await user.addFollowers(req.user.id);
-        res.status(200).json({ id: req.params.userId });
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-});
 
-router.delete("/:userId/unfollow", async (req, res, next) => {
-    //unfollow
-    try {
-        const user = await User.findOne({ where: { id: req.params.userId } });
-        if (!user) {
-            return res.status(403).send("없는 사람을 취소할 수는 없어요~");
-        }
-        await user.removeFollowers(req.user.id);
-        res.json({ id: req.params.userId });
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-});
 router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
     // PATCH /user/1/follow
     try {
