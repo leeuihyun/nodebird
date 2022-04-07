@@ -191,7 +191,9 @@ const post = handleActions(
         }),
         [REMOVE_POST_SUCCESS]: (state, action) => ({
             ...state,
-            mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
+            mainPosts: state.mainPosts.filter(
+                (v) => v.id !== action.data.PostId
+            ),
             removePostLoading: false,
             removePostDone: true,
             removePostError: null,
