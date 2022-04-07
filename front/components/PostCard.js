@@ -92,7 +92,12 @@ function PostCard({ post }) {
                         <EllipsisOutlined />
                     </Popover>,
                 ]}
-                extra={user && <FollowButton post={post}></FollowButton>}
+                extra={
+                    user &&
+                    user.id !== post.UserId && (
+                        <FollowButton post={post}></FollowButton>
+                    )
+                }
             >
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
