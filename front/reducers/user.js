@@ -128,12 +128,12 @@ const user = handleActions(
             changeNicknameDone: false,
             changeNicknameError: null,
         }),
-        [CHANGE_NICKNAME_SUCCESS]: (state, action) => ({
-            ...state,
-            changeNicknameLoading: false,
-            changeNicknameDone: true,
-            changeNicknameError: null,
-        }),
+        [CHANGE_NICKNAME_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.nickname = action.data.nickname;
+                draft.changeNicknameLoading = false;
+                draft.changeNicknameDone = true;
+            }),
         [CHANGE_NICKNAME_FAILURE]: (state, action) => ({
             ...state,
             changeNicknameLoading: true,
