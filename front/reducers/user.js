@@ -32,6 +32,14 @@ export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
 export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
 export const LOAD_USER_FAILURE = "LOAD_USER_FAILURE";
 
+export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
+export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
+export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
+
+export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLOWINGS_REQUEST";
+export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS";
+export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
+
 export const logInRequest = createAction(LOG_IN_REQUEST, (data) => data);
 export const logOutRequest = createAction(LOG_OUT_REQUEST);
 export const changeNickname = createAction(
@@ -61,6 +69,12 @@ const initialState = {
     unFollowLoading: false,
     unFollowDone: false,
     unFollowError: null,
+    loadFollowersLoading: false,
+    loadFollowersDone: false,
+    loadFollowersError: null,
+    loadFollowingsLoading: false,
+    loadFollowingsDone: false,
+    loadFollowingsError: null,
     user: null,
     signUpdata: {},
     loginData: {},
@@ -159,7 +173,7 @@ const user = handleActions(
             }),
         [FOLLOW_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.user.Followings.push({ id: action.data }); //이름 같은 다른 정보도 들어갈 수 있기 때문에 객체로 처음에 설정해놨었음
+                draft.user.Followings.push({ id: action.data.UserId }); //이름 같은 다른 정보도 들어갈 수 있기 때문에 객체로 처음에 설정해놨었음
                 draft.followLoading = false;
                 draft.followDone = true;
                 draft.followError = null;
@@ -179,7 +193,7 @@ const user = handleActions(
         [UNFOLLOW_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
                 draft.user.Followings = draft.user.Followings.filter(
-                    (item) => item.id !== action.data
+                    (item) => item.id !== action.data.UserId
                 );
                 draft.unFollowLoading = false;
                 draft.unFollowDone = true;
@@ -209,6 +223,44 @@ const user = handleActions(
                 draft.loadUserLoading = false;
                 draft.loadUserDone = false;
                 draft.loadUserError = action.error;
+            }),
+        [LOAD_FOLLOWERS_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadFollowersLoading = true;
+                draft.loadFollowersDone = false;
+                draft.loadFollowersError = null;
+            }),
+        [LOAD_FOLLOWERS_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Followers = action.data;
+                draft.loadFollowersLoading = false;
+                draft.loadFollowersDone = true;
+                draft.loadFollowersError = null;
+            }),
+        [LOAD_FOLLOWERS_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadFollowersLoading = false;
+                draft.loadFollowersDone = false;
+                draft.loadFollowersError = action.error;
+            }),
+        [LOAD_FOLLOWINGS_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadFollowingsLoading = true;
+                draft.loadFollowingsDone = false;
+                draft.loadFollowingsError = null;
+            }),
+        [LOAD_FOLLOWINGS_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Followings = action.data;
+                draft.loadFollowingsLoading = false;
+                draft.loadFollowingsDone = true;
+                draft.loadFollowingsError = null;
+            }),
+        [LOAD_FOLLOWINGS_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadFollowingsLoading = false;
+                draft.loadFollowingsDone = false;
+                draft.loadFollowingsError = action.error;
             }),
     },
     initialState
