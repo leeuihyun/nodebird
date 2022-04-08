@@ -11,9 +11,13 @@ import { LOAD_USER_REQUEST } from "../reducers/user";
 const Home = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-    const { mainPosts, hasMorePost, loadPostLoading } = useSelector(
-        (state) => state.post
-    );
+    const { mainPosts, hasMorePost, loadPostLoading, retweetError } =
+        useSelector((state) => state.post);
+    useEffect(() => {
+        if (retweetError) {
+            alert(retweetError);
+        }
+    }, [retweetError]);
     useEffect(() => {
         dispatch({
             type: LOAD_USER_REQUEST,
@@ -35,8 +39,10 @@ const Home = () => {
                 document.documentElement.scrollHeight - 300
             )
                 if (hasMorePost && !loadPostLoading) {
+                    const lastId = mainPosts[mainPosts.length - 1]?.id; //없으면 undefined
                     dispatch({
                         type: LOAD_POST_REQUEST,
+                        lastId,
                     });
                 }
         }

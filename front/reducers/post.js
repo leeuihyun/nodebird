@@ -27,6 +27,16 @@ export const UNLIKE_POST_REQUEST = "UNLIKE_POST_REQUEST";
 export const UNLIKE_POST_SUCCESS = "UNLIKE_POST_SUCCESS";
 export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
 
+export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
+export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
+export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
+
+export const RETWEET_REQUEST = "RETWEET_REQUEST";
+export const RETWEET_SUCCESS = "RETWEET_SUCCESS";
+export const RETWEET_FAILURE = "RETWEET_FAILURE";
+
+export const REMOVE_IMAGES_REQUEST = "REMOVE_IMAGES_REQUEST";
+
 export const addPost = createAction(ADD_POST_REQUEST, (data) => data);
 export const addComment = createAction(ADD_COMMENT_REQUEST, (data) => data);
 /*
@@ -98,6 +108,15 @@ const initialState = {
     unlikePostLoading: false,
     unlikePostDone: false,
     unlikePostError: null,
+    uploadImagesLoading: false,
+    uploadImagesDone: false,
+    uploadImagesError: null,
+    removeImagesLoading: false,
+    removeImagesDone: false,
+    removeImagesError: null,
+    retweetLoading: false,
+    retweetDone: false,
+    retweetError: null,
 };
 
 const post = handleActions(
@@ -156,6 +175,7 @@ const post = handleActions(
                 draft.addPostLoading = false;
                 draft.addPostDone = true;
                 draft.addPostError = null;
+                draft.imagePaths = [];
             }),
         [ADD_POST_FAILURE]: (state, action) =>
             produce(state, (draft) => {
@@ -222,6 +242,30 @@ const post = handleActions(
                 draft.loadPostLoading = false;
                 draft.loadPostError = action.error;
             }),
+        [UPLOAD_IMAGES_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.uploadImagesLoading = true;
+                draft.uploadImagesDone = false;
+                draft.uploadImagesError = null;
+            }),
+        [UPLOAD_IMAGES_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.imagePaths = action.data;
+                draft.uploadImagesLoading = false;
+                draft.uploadImagesDone = true;
+            }),
+        [UPLOAD_IMAGES_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.uploadImagesLoading = false;
+                draft.uploadImagesError = action.error;
+            }),
+        [REMOVE_IMAGES_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.imagePaths = draft.imagePaths.filter(
+                    (v, i) => i !== action.data
+                );
+            }),
+
         [LIKE_POST_REQUEST]: (state, action) =>
             produce(state, (draft) => {
                 draft.likePostLoading = true;
@@ -263,6 +307,23 @@ const post = handleActions(
             produce(state, (draft) => {
                 draft.unlikePostLoading = false;
                 draft.unlikePostError = action.error;
+            }),
+        [RETWEET_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.retweetLoading = true;
+                draft.retweetDone = false;
+                draft.retweetError = null;
+            }),
+        [RETWEET_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.mainPosts.unshift(action.data);
+                draft.retweetLoading = false;
+                draft.retweetDone = true;
+            }),
+        [RETWEET_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.retweetLoading = false;
+                draft.retweetError = action.error;
             }),
     },
     initialState
