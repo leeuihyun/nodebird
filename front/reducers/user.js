@@ -40,6 +40,10 @@ export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLOWINGS_REQUEST";
 export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS";
 export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
 
+export const REMOVE_FOLLOWER_REQUEST = "REMOVE_FOLLOWER_REQUEST";
+export const REMOVE_FOLLOWER_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
+export const REMOVE_FOLLOWER_FAILURE = "REMOVE_FOLLOWER_FAILURE";
+
 export const logInRequest = createAction(LOG_IN_REQUEST, (data) => data);
 export const logOutRequest = createAction(LOG_OUT_REQUEST);
 export const changeNickname = createAction(
@@ -75,6 +79,9 @@ const initialState = {
     loadFollowingsLoading: false,
     loadFollowingsDone: false,
     loadFollowingsError: null,
+    removeFollowerLoading: false,
+    removeFollowerDone: false,
+    removeFollowerError: null,
     user: null,
     signUpdata: {},
     loginData: {},
@@ -197,7 +204,6 @@ const user = handleActions(
                 );
                 draft.unFollowLoading = false;
                 draft.unFollowDone = true;
-                draft.unFollowError = null;
             }),
         [UNFOLLOW_FAILURE]: (state, action) =>
             produce(state, (draft) => {
@@ -208,7 +214,6 @@ const user = handleActions(
         [LOAD_USER_REQUEST]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadUserLoading = true;
-                draft.loadUserDone = false;
                 draft.loadUserError = null;
             }),
         [LOAD_USER_SUCCESS]: (state, action) =>
@@ -261,6 +266,25 @@ const user = handleActions(
                 draft.loadFollowingsLoading = false;
                 draft.loadFollowingsDone = false;
                 draft.loadFollowingsError = action.error;
+            }),
+        [REMOVE_FOLLOWER_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.removeFollowerLoading = true;
+                draft.removeFollowerDone = false;
+                draft.removeFollowerError = null;
+            }),
+        [REMOVE_FOLLOWER_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Followers = draft.user.Followers.filter(
+                    (v) => v.id !== action.data.UserId
+                );
+                draft.removeFollowerLoading = false;
+                draft.removeFollowerDone = true;
+            }),
+        [REMOVE_FOLLOWER_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.removeFollowerLoading = false;
+                draft.removeFollowerError = action.error;
             }),
     },
     initialState
