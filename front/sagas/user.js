@@ -14,6 +14,7 @@ import {
     FOLLOW_REQUEST,
     UNFOLLOW_SUCCESS,
     UNFOLLOW_REQUEST,
+    UNFOLLOW_FAILURE,
     LOAD_USER_REQUEST,
     LOAD_USER_FAILURE,
     LOAD_USER_SUCCESS,
@@ -26,6 +27,9 @@ import {
     LOAD_FOLLOWINGS_REQUEST,
     LOAD_FOLLOWINGS_SUCCESS,
     LOAD_FOLLOWINGS_FAILURE,
+    REMOVE_FOLLOWER_FAILURE,
+    REMOVE_FOLLOWER_REQUEST,
+    REMOVE_FOLLOWER_SUCCESS,
 } from "../reducers/user";
 
 import axios from "axios";
@@ -43,7 +47,7 @@ function followApi(data) {
     return axios.patch(`/user/${data}/follow`, data);
 }
 function unFollowApi(data) {
-    return axios.delete(`/user/${data}/unfollow`, data);
+    return axios.delete(`/user/${data}/follow`, data);
 }
 function loadUserApi() {
     return axios.get("/user");
@@ -56,6 +60,9 @@ function loadFollowersApi(data) {
 }
 function loadFollowingsApi(data) {
     return axios.get(`/user/followings`, data);
+}
+function removeFollowerApi(data) {
+    return axios.delete(`/user/follower/${data}`);
 }
 //login
 function* logIn(action) {
@@ -148,7 +155,7 @@ function* unFollow(action) {
     } catch (err) {
         console.log(err);
         yield put({
-            type: UNFOLLOW_SUCCESS,
+            type: UNFOLLOW_FAILURE,
             data: err.response.data,
         });
     }
@@ -234,8 +241,28 @@ function* loadFollowings(action) {
 function* watchLoadFollowings() {
     yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
 }
+
+function* removeFollower(action) {
+    try {
+        const res = yield call(removeFollowerApi, action.data);
+        yield put({
+            type: REMOVE_FOLLOWER_SUCCESS,
+            data: res.data,
+        });
+    } catch (error) {
+        console.error(error);
+        yield put({
+            type: REMOVE_FOLLOWER_FAILURE,
+            data: error.response.data,
+        });
+    }
+}
+function* watchRemoveFollower() {
+    yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
 export default function* userSaga() {
     yield all([
+        fork(watchRemoveFollower),
         fork(watchChangeNickname),
         fork(watchLogIn),
         fork(watchLogOut),
