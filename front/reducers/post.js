@@ -15,6 +15,10 @@ export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
 export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
+export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
+export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
+export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
+
 export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
@@ -34,6 +38,14 @@ export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
 export const RETWEET_REQUEST = "RETWEET_REQUEST";
 export const RETWEET_SUCCESS = "RETWEET_SUCCESS";
 export const RETWEET_FAILURE = "RETWEET_FAILURE";
+
+export const LOAD_USER_POSTS_REQUEST = "LOAD_USER_POSTS_REQUEST";
+export const LOAD_USER_POSTS_SUCCESS = "LOAD_USER_POSTS_SUCCESS";
+export const LOAD_USER_POSTS_FAILURE = "LOAD_USER_POSTS_FAILURE";
+
+export const LOAD_HASHTAG_POSTS_REQUEST = "LOAD_HASHTAG_POSTS_REQUEST";
+export const LOAD_HASHTAG_POSTS_SUCCESS = "LOAD_HASHTAG_POSTS_SUCCESS";
+export const LOAD_HASHTAG_POSTS_FAILURE = "LOAD_HASHTAG_POSTS_FAILURE";
 
 export const REMOVE_IMAGES_REQUEST = "REMOVE_IMAGES_REQUEST";
 
@@ -89,6 +101,7 @@ export const generateDummyPost = (number) =>
 const initialState = {
     mainPosts: [],
     imagePaths: [],
+    singlePost: null,
     hasMorePost: true, //게시글을 몇개만 볼지 ?
     addPostLoading: false,
     addPostDone: false,
@@ -99,6 +112,9 @@ const initialState = {
     addCommentLoading: false,
     addCommentDone: false,
     addCommentError: null,
+    loadPostsLoading: false,
+    loadPostsDone: false,
+    loadPostsError: null,
     loadPostLoading: false,
     loadPostDone: false,
     loadPostError: null,
@@ -224,20 +240,20 @@ const post = handleActions(
             addPostDone: false,
             addPostError: action.error,
         }),
-        [LOAD_POST_REQUEST]: (state, action) =>
+        [LOAD_POSTS_REQUEST]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadPostLoading = true;
                 draft.loadPostDone = false;
                 draft.loadPostError = null;
             }),
-        [LOAD_POST_SUCCESS]: (state, action) =>
+        [LOAD_POSTS_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadPostLoading = false;
                 draft.loadPostDone = true;
                 draft.mainPosts = draft.mainPosts.concat(action.data);
                 draft.hasMorePost = action.data.length === 10;
             }),
-        [LOAD_POST_FAILURE]: (state, action) =>
+        [LOAD_POSTS_FAILURE]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadPostLoading = false;
                 draft.loadPostError = action.error;
@@ -324,6 +340,59 @@ const post = handleActions(
             produce(state, (draft) => {
                 draft.retweetLoading = false;
                 draft.retweetError = action.error;
+            }),
+        [LOAD_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [LOAD_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.singlePost = action.data;
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+            }),
+        [LOAD_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.error;
+            }),
+        [LOAD_USER_POSTS_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [LOAD_USER_POSTS_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePost = action.data.length === 10;
+            }),
+        [LOAD_USER_POSTS_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.error;
+            }),
+        [LOAD_HASHTAG_POSTS_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [LOAD_HASHTAG_POSTS_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePost = action.data.length === 10;
+            }),
+        [LOAD_HASHTAG_POSTS_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.error;
             }),
     },
     initialState
