@@ -28,9 +28,9 @@ export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
 
-export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
-export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
-export const LOAD_USER_FAILURE = "LOAD_USER_FAILURE";
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
 export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
 export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
@@ -44,6 +44,10 @@ export const REMOVE_FOLLOWER_REQUEST = "REMOVE_FOLLOWER_REQUEST";
 export const REMOVE_FOLLOWER_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
 export const REMOVE_FOLLOWER_FAILURE = "REMOVE_FOLLOWER_FAILURE";
 
+export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
+export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
+export const LOAD_USER_FAILURE = "LOAD_USER_FAILURE";
+
 export const logInRequest = createAction(LOG_IN_REQUEST, (data) => data);
 export const logOutRequest = createAction(LOG_OUT_REQUEST);
 export const changeNickname = createAction(
@@ -52,6 +56,9 @@ export const changeNickname = createAction(
 );
 
 const initialState = {
+    loadMyInfoLoading: false,
+    loadMyInfoDone: false,
+    loadMyInfoError: null,
     loadUserLoading: false,
     loadUserDone: false,
     loadUserError: null,
@@ -83,8 +90,7 @@ const initialState = {
     removeFollowerDone: false,
     removeFollowerError: null,
     user: null,
-    signUpdata: {},
-    loginData: {},
+    userInfo: null,
 };
 
 const user = handleActions(
@@ -211,6 +217,24 @@ const user = handleActions(
                 draft.unFollowDone = false;
                 draft.unFollowError = action.error;
             }),
+        [LOAD_MY_INFO_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadMyInfoLoading = true;
+                draft.loadMyInfoError = null;
+            }),
+        [LOAD_MY_INFO_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user = action.data;
+                draft.loadMyInfoLoading = false;
+                draft.loadMyInfoDone = true;
+                draft.loadMyInfoError = null;
+            }),
+        [LOAD_MY_INFO_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadMyInfoLoading = false;
+                draft.loadMyInfoDone = false;
+                draft.loadMyInfoError = action.error;
+            }),
         [LOAD_USER_REQUEST]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadUserLoading = true;
@@ -218,7 +242,7 @@ const user = handleActions(
             }),
         [LOAD_USER_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.user = action.data;
+                draft.userInfo = action.data;
                 draft.loadUserLoading = false;
                 draft.loadUserDone = true;
                 draft.loadUserError = null;
