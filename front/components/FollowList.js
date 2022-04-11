@@ -8,7 +8,7 @@ function FollowList({ header, data }) {
     const dispatch = useDispatch();
 
     const onClickButton = (id) => () => {
-        if (header === "팔로잉") {
+        if (header === "팔로잉") {
             dispatch({
                 type: UNFOLLOW_REQUEST,
                 data: id,
