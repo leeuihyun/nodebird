@@ -6,8 +6,11 @@ import styled from "styled-components";
 import useInput from "../hooks/useInput";
 import { useSelector, useDispatch } from "react-redux";
 import { SIGN_UP_REQUEST, SIGN_UP_RESET } from "../reducers/user";
-
+import axios from "axios";
+import { END } from "redux-saga";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import Router from "next/router";
+import wrapper from "../store/configureStore";
 const ErrorMessage = styled.div`
     color: red;
 `;
@@ -142,5 +145,22 @@ const Signup = () => {
         </>
     );
 };
+export const getServerSideProps = wrapper.getServerSideProps(
+    async (context) => {
+        console.log("getServerSideProps start");
+        console.log(context.req.headers);
+        const cookie = context.cookie ? context.req.headers.cookie : "";
+        axios.defaults.headers.Cookie = "";
+        if (context.req && cookie) {
+            axios.defaults.headers.Cookie = cookie;
+        }
+        context.store.dispatch({
+            type: LOAD_MY_INFO_REQUEST,
+        });
+        context.store.dispatch(END);
+        console.log("getServerSideProps end");
+        await context.store.sagaTask.toPromise();
+    }
+);
 
 export default Signup;
