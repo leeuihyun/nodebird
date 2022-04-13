@@ -1,9 +1,16 @@
 import React, { useCallback } from "react";
 import { Card, Avatar, Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { LOG_OUT_REQUEST } from "../../front/reducers/user";
 
-function UserProfile({ setIsLoggedIn }) {
+function UserProfile() {
+    const dispatch = useDispatch();
+    const { logOutLoading } = useSelector((state) => state.user);
+
     const onClick = useCallback(() => {
-        setIsLoggedIn(false);
+        dispatch({
+            type: LOG_OUT_REQUEST,
+        });
     }, []);
     return (
         <Card
@@ -23,7 +30,11 @@ function UserProfile({ setIsLoggedIn }) {
             ]}
         >
             <Card.Meta avatar={<Avatar>Vc</Avatar>} title="Vanc" />
-            <Button onClick={onClick}>로그아웃</Button>
+            <Button onClick={onClick}>
+                {" "}
+                {/*loading={logOutLoading} */}
+                로그아웃
+            </Button>
         </Card>
     );
 }
