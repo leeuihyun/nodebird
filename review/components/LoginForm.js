@@ -2,11 +2,16 @@ import React, { useCallback, useState } from "react";
 import { Form, Button, Input } from "antd";
 import styled from "styled-components";
 import Link from "next/link";
-
+import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { LOG_IN_REQUEST } from "../reducers/user";
 const DivBox = styled.div`
     margin-top: 10px;
 `;
-function LoginForm({ setIsLoggedIn }) {
+function LoginForm() {
+    const dispatch = useDispatch();
+    const { logInLoading } = useSelector((state) => state.user);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -20,13 +25,19 @@ function LoginForm({ setIsLoggedIn }) {
         (e) => {
             //onFinish = e.preventDefault() 가 이미 적용되어있음~!
             if (email && password) {
-                setIsLoggedIn(true);
+                dispatch({
+                    type: LOG_IN_REQUEST,
+                    data: {
+                        email,
+                        password,
+                    },
+                });
             }
         },
         [email, password]
     );
     return (
-        <Form onFinish={onSubmitForm}>
+        <Form onFinish={onSubmitForm} style={{ padding: "10px" }}>
             <div>
                 <label htmlFor="email">이메일</label>
                 <br />
@@ -50,6 +61,7 @@ function LoginForm({ setIsLoggedIn }) {
             </div>
             <DivBox>
                 <Button type="primary" htmlType="submit">
+                    {/*loading={logInLoading}*/}
                     로그인
                 </Button>
                 <Link href="/signup">
