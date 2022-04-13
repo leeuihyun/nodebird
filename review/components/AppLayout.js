@@ -6,6 +6,7 @@ import styled from "styled-components";
 import twitImage from "../img/twit1.jpeg";
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
+import { useSelector } from "react-redux";
 
 const TwitBox = styled.div`
     display: flex;
@@ -16,7 +17,7 @@ const SearchInput = styled(Input.Search)`
     vertical-align: middle;
 `;
 function AppLayout({ children }) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user } = useSelector((state) => state.user);
     return (
         <>
             <TwitBox>
@@ -47,11 +48,7 @@ function AppLayout({ children }) {
             </Menu>
             <Row gutter={8}>
                 <Col xs={24} md={6}>
-                    {isLoggedIn ? (
-                        <UserProfile setIsLoggedIn={setIsLoggedIn} />
-                    ) : (
-                        <LoginForm setIsLoggedIn={setIsLoggedIn} />
-                    )}
+                    {user ? <UserProfile /> : <LoginForm />}
                 </Col>
                 <Col xs={24} md={12}>
                     {children}
