@@ -12,7 +12,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
-//import CommentForm from "./CommentForm";
+import CommentForm from "./CommentForm";
 //import PostCardContent from "./PostCardContent";
 import PostImages from "./PostImages";
 import FollowButton from "./FollowButton";
@@ -77,7 +77,7 @@ const PostCard = ({ post }) => {
                     description={post.content}
                 />
             </Card>
-            {/*commentFormOpened && (
+            {commentFormOpened && (
                 <>
                     <CommentForm post={post} />
                     <List
@@ -89,19 +89,7 @@ const PostCard = ({ post }) => {
                                 <Comment
                                     author={item.User.nickname}
                                     avatar={
-                                        <Link
-                                            href={{
-                                                pathname: "/user",
-                                                query: { id: item.User.id },
-                                            }}
-                                            as={`/user/${item.User.id}`}
-                                        >
-                                            <a>
-                                                <Avatar>
-                                                    {item.User.nickname[0]}
-                                                </Avatar>
-                                            </a>
-                                        </Link>
+                                        <Avatar>{item.User.nickname[0]}</Avatar>
                                     }
                                     content={item.content}
                                 />
@@ -109,14 +97,14 @@ const PostCard = ({ post }) => {
                         )}
                     />
                 </>
-            )*/}
+            )}
         </CardWrapper>
     );
 };
 
 PostCard.propTypes = {
     post: PropTypes.shape({
-        id: PropTypes.number,
+        id: PropTypes.string,
         User: PropTypes.object,
         content: PropTypes.string,
         createdAt: PropTypes.object,

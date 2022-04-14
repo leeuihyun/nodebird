@@ -8,16 +8,24 @@ function PostForm() {
     const { imagePaths } = useSelector((state) => state.post);
     const [text, setText] = useState("");
     const imageRef = useRef(); //실제 dom에 접근
+    const { user } = useSelector((state) => state.user);
+
     const onChangeText = useCallback((e) => {
         setText(e.target.value);
     }, []);
     const onSubmitForm = useCallback(() => {
         dispatch({
             type: ADD_POST_REQUEST,
-            data: text,
+            data: {
+                User: {
+                    id: user.id,
+                    nickname: user.nickname,
+                },
+                content: text,
+            },
         });
         setText("");
-    }, []);
+    }, [text]);
     const onClickImageUpload = useCallback(() => {
         imageRef.current.click();
     }, [imageRef.current]);
