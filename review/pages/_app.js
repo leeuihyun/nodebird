@@ -1,6 +1,7 @@
 import "antd/dist/antd.css";
 import PropTypes from "prop-types";
 import wrapper from "../store/configureStore";
+
 const App = ({ Component }) => {
     return <Component />;
 };
