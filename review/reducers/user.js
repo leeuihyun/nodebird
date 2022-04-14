@@ -1,5 +1,6 @@
 import { createAction, handleActions } from "redux-actions";
 import produce from "immer";
+import shortId from "shortid";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
@@ -25,16 +26,17 @@ const initialState = {
     signUpDone: false,
     signUpError: false,
 };
-const dummyUser = {
-    id: 1,
-    email: "dummy@naver.com",
-    nickname: "vanc",
-};
+
+const dummyUser = (data) => ({
+    id: shortId.generate(),
+    email: data.User.email,
+    nickname: data.User.nickname,
+});
 const user = handleActions(
     {
         [LOG_IN_REQUEST]: (state, action) =>
             produce(state, (draft) => {
-                draft.user = dummyUser;
+                draft.user = dummyUser(action.data);
                 draft.logInLoading = true;
                 draft.logInDone = false;
                 draft.logInError = null;
