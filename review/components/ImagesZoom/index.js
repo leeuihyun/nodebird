@@ -1,6 +1,6 @@
 //component 가 많아지고 복잡해지면 이렇게 폴더 안에 만듬.
 //why ?
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import Slick from "react-slick";
 import {
@@ -15,8 +15,13 @@ import {
 
 const ImagesZoom = ({ images, onClose }) => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const exit = useCallback((e) => {
+        if (e.keyCode === 27) {
+            onClose();
+        }
+    }, []);
     return (
-        <Overlay>
+        <Overlay onKeyDown={exit}>
             <Global />
             <Header>
                 <h1>상세 이미지</h1>
