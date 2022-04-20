@@ -2,9 +2,11 @@ import { createWrapper } from "next-redux-wrapper";
 import { createStore, applyMiddleware, compose } from "redux";
 import rootReducer from "../reducers";
 import { composeWithDevTools } from "redux-devtools-extension";
+import createSagaMiddleware from "redux-saga";
 
 const configureStore = () => {
-    const middlewares = [];
+    const sagaMiddleware = createSagaMiddleware();
+    const middlewares = [sagaMiddleware];
 
     const enhancer =
         process.env.NODE_ENV === "production"
