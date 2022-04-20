@@ -4,6 +4,8 @@ import rootReducer from "../reducers";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 
+import rootSaga from "../sagas";
+
 const configureStore = () => {
     const sagaMiddleware = createSagaMiddleware();
     const middlewares = [sagaMiddleware];
@@ -13,6 +15,8 @@ const configureStore = () => {
             ? compose(applyMiddleware(...middlewares))
             : composeWithDevTools(applyMiddleware(...middlewares)); //개발용
     const store = createStore(rootReducer, enhancer);
+    store.sagaTask = sagaMiddleware.run(rootSaga);
+
     return store;
 };
 
