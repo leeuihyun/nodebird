@@ -6,12 +6,16 @@ import { LOG_OUT_REQUEST } from "../../front/reducers/user";
 function UserProfile() {
     const dispatch = useDispatch();
     const { logOutLoading } = useSelector((state) => state.user);
+    const { user } = useSelector((state) => state.user);
 
     const onClick = useCallback(() => {
         dispatch({
             type: LOG_OUT_REQUEST,
         });
     }, []);
+
+    useEffect(() => {}, []);
+
     return (
         <Card
             actions={[
@@ -29,7 +33,10 @@ function UserProfile() {
                 </div>,
             ]}
         >
-            <Card.Meta avatar={<Avatar>Vc</Avatar>} title="Vanc" />
+            <Card.Meta
+                avatar={<Avatar>{user.nickname[0]}</Avatar>}
+                title="Vanc"
+            />
             <Button onClick={onClick} loading={logOutLoading}>
                 로그아웃
             </Button>
