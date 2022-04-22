@@ -62,8 +62,7 @@ function LoginForm() {
                 />
             </div>
             <DivBox>
-                <Button type="primary" htmlType="submit">
-                    {/*loading={logInLoading}*/}
+                <Button type="primary" htmlType="submit" loading={logInLoading}>
                     로그인
                 </Button>
                 <Link href="/signup">

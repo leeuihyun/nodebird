@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Card, Avatar, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { LOG_OUT_REQUEST } from "../../front/reducers/user";
@@ -30,9 +30,7 @@ function UserProfile() {
             ]}
         >
             <Card.Meta avatar={<Avatar>Vc</Avatar>} title="Vanc" />
-            <Button onClick={onClick}>
-                {" "}
-                {/*loading={logOutLoading} */}
+            <Button onClick={onClick} loading={logOutLoading}>
                 로그아웃
             </Button>
         </Card>
