@@ -36,13 +36,13 @@ const user = handleActions(
     {
         [LOG_IN_REQUEST]: (state, action) =>
             produce(state, (draft) => {
-                draft.user = dummyUser(action.data);
                 draft.logInLoading = true;
                 draft.logInDone = false;
                 draft.logInError = null;
             }),
         [LOG_IN_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
+                draft.user = dummyUser(action.data);
                 draft.logInLoading = false;
                 draft.logInDone = true;
             }),
@@ -59,6 +59,7 @@ const user = handleActions(
             }),
         [LOG_OUT_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
+                draft.user = null;
                 draft.logOutLoading = false;
                 draft.logOutDone = true;
             }),
