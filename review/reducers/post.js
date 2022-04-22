@@ -45,13 +45,15 @@ const initialState = {
         },
     ],
     imagePaths: [],
-    postAdded: false,
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
     addCommentLoading: false,
     addCommentDone: false,
     addCommentError: null,
+    removePostLoading: false,
+    removePostDone: false,
+    removePostError: null,
 };
 
 const dummyPost = (data) => ({
@@ -80,25 +82,70 @@ export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
+export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
+export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
+export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
+
 const post = handleActions(
     {
         [ADD_POST_REQUEST]: (state, action) =>
             produce(state, (draft) => {
-                draft.mainPosts.unshift(dummyPost(action.data));
-                draft.postAdded = true;
                 draft.addPostLoading = true;
                 draft.addPostDone = false;
                 draft.addPostError = null;
             }),
+        [ADD_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.mainPosts.unshift(dummyPost(action.data));
+                draft.addPostLoading = false;
+                draft.addPostDone = true;
+            }),
+        [ADD_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addPostLoading = false;
+                draft.addPostError = action.error;
+            }),
         [ADD_COMMENT_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addCommentLoading = true;
+                draft.addCommentDone = false;
+                draft.addCommentError = null;
+            }),
+        [ADD_COMMENT_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
                 const post = draft.mainPosts.find(
                     (v) => v.id === action.data.id
                 );
                 post.Comments.unshift(dummyComment(action.data));
+                draft.addCommentLoading = false;
+                draft.addCommentDone = true;
+                draft.addCommentError = null;
+            }),
+        [ADD_COMMENT_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addCommentError = action.data.error;
+                draft.addCommentLoading = false;
+            }),
+        [REMOVE_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
                 draft.addCommentLoading = true;
                 draft.addCommentDone = false;
                 draft.addCommentError = null;
+            }),
+        [REMOVE_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                const post = draft.mainPosts.find(
+                    (v) => v.id === action.data.id
+                );
+                draft.mainPosts.filter((v) => v.id !== action.data.id);
+                draft.addCommentLoading = false;
+                draft.addCommentDone = true;
+                draft.addCommentError = null;
+            }),
+        [REMOVE_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.addCommentError = action.data.error;
+                draft.addCommentLoading = false;
             }),
     },
     initialState
