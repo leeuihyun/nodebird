@@ -4,11 +4,15 @@ import useInput from "../hooks/useInput";
 import { useState, useCallback } from "react";
 import Head from "next/head";
 import styled from "styled-components";
+import { useEffect } from "react";
+import Router from "next/router";
+import { useSelector, useDispatch } from "react-redux";
 
 const ErrorMessage = styled.div`
     color: red;
 `;
 const Signup = () => {
+    const { user } = useSelector((state) => state.user);
     const [nickname, onChangeNickname] = useInput("");
     const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");
@@ -29,6 +33,11 @@ const Signup = () => {
         },
         [password]
     );
+    useEffect(() => {
+        if (user) {
+            Router.push("/");
+        }
+    }, [user]);
     const onSubmitForm = useCallback(() => {
         if (password !== passwordCheck) {
             return setPasswordError(true);
