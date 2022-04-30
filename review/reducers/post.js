@@ -134,9 +134,6 @@ const post = handleActions(
             }),
         [REMOVE_POST_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                const post = draft.mainPosts.find(
-                    (v) => v.id === action.data.id
-                );
                 draft.mainPosts.filter((v) => v.id !== action.data.id);
                 draft.addCommentLoading = false;
                 draft.addCommentDone = true;
