@@ -14,6 +14,14 @@ export const SIGN_UP_REQUEST = "SIGN_UP_REQUEST";
 export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
 export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
 
+export const FOLLOW_REQUEST = "FOLLOW_REQUEST";
+export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
+export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
+
+export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
+export const UNFOLLOW_SUCCESS = "FOLLOW_SUCCESS";
+export const UNFOLLOW_FAILURE = "FOLLOW_FAILURE";
+
 const initialState = {
     user: null,
     logInLoading: false,
@@ -25,6 +33,12 @@ const initialState = {
     signUpLoading: false,
     signUpDone: false,
     signUpError: false,
+    followLoading: false,
+    followDone: false,
+    followError: null,
+    unfollowLoading: false,
+    unfollowDone: false,
+    unfollowError: null,
 };
 
 const dummyUser = (data) => ({
@@ -83,6 +97,38 @@ const user = handleActions(
             produce(state, (draft) => {
                 draft.signUpLoading = false;
                 draft.signUpError = action.error;
+            }),
+        [FOLLOW_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.followLoading = true;
+                draft.followDone = false;
+                draft.followError = null;
+            }),
+        [FOLLOW_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.followLoading = false;
+                draft.followDone = true;
+            }),
+        [FOLLOW_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.followLoading = false;
+                draft.followError = action.error;
+            }),
+        [UNFOLLOW_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.unfollowLoading = true;
+                draft.unfollowDone = false;
+                draft.unfollowError = null;
+            }),
+        [UNFOLLOW_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.unfollowLoading = false;
+                draft.unfollowDone = true;
+            }),
+        [UNFOLLOW_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.unfollowLoading = false;
+                draft.unfollowError = action.error;
             }),
     },
     initialState
