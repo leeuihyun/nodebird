@@ -45,6 +45,9 @@ const dummyUser = (data) => ({
     id: shortId.generate(),
     email: data.User.email,
     nickname: data.User.nickname,
+    Posts: [],
+    Followings: [],
+    Followers: [],
 });
 const user = handleActions(
     {
