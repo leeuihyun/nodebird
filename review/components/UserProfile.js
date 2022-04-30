@@ -20,16 +20,19 @@ function UserProfile() {
         <Card
             actions={[
                 <div key="twit">
-                    짹짹
-                    <br />8
+                    게시글
+                    <br />
+                    {user.Posts.length}
                 </div>,
                 <div key="following">
                     팔로잉
-                    <br />0
+                    <br />
+                    {user.Followings.length}
                 </div>,
                 <div key="follower">
                     팔로워
-                    <br />0
+                    <br />
+                    {user.Followers.length}
                 </div>,
             ]}
         >
