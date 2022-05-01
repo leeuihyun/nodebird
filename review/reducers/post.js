@@ -5,7 +5,7 @@ import shortId from "shortid";
 const initialState = {
     mainPosts: [
         {
-            id: 1,
+            id: "daf12sa",
             User: {
                 id: 1,
                 nickname: "vanc",
@@ -57,12 +57,12 @@ const initialState = {
 };
 
 const dummyPost = (data) => ({
-    id: shortId.generate(),
+    id: data.id,
     User: {
-        id: data.User.id,
-        nickname: data.User.nickname,
+        id: data.content.User.id,
+        nickname: data.content.User.nickname,
     },
-    content: data.content,
+    content: data.content.content,
     Images: [],
     Comments: [],
 });
@@ -128,21 +128,23 @@ const post = handleActions(
             }),
         [REMOVE_POST_REQUEST]: (state, action) =>
             produce(state, (draft) => {
-                draft.addCommentLoading = true;
-                draft.addCommentDone = false;
-                draft.addCommentError = null;
+                draft.removePostLoading = true;
+                draft.removePostDone = false;
+                draft.removePostError = null;
             }),
         [REMOVE_POST_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.mainPosts.filter((v) => v.id !== action.data.id);
-                draft.addCommentLoading = false;
-                draft.addCommentDone = true;
-                draft.addCommentError = null;
+                draft.mainPosts = draft.mainPosts.filter(
+                    (v) => v.id !== action.data
+                );
+                draft.removePostLoading = false;
+                draft.removePostDone = true;
+                draft.removePostError = null;
             }),
         [REMOVE_POST_FAILURE]: (state, action) =>
             produce(state, (draft) => {
-                draft.addCommentError = action.data.error;
-                draft.addCommentLoading = false;
+                draft.removePostError = action.data.error;
+                draft.removePostLoading = false;
             }),
     },
     initialState

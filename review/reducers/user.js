@@ -22,6 +22,9 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "FOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "FOLLOW_FAILURE";
 
+export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
+export const REMOVE_POST_TO_ME = "REMOVE_POST_TO_ME";
+
 const initialState = {
     user: null,
     logInLoading: false,
@@ -132,6 +135,17 @@ const user = handleActions(
             produce(state, (draft) => {
                 draft.unfollowLoading = false;
                 draft.unfollowError = action.error;
+            }),
+        [ADD_POST_TO_ME]: (state, action) =>
+            produce(state, (draft) => {
+                draft.user.Posts.unshift(action.data);
+            }),
+        [REMOVE_POST_TO_ME]: (state, action) =>
+            produce(state, (draft) => {
+                console.log(1);
+                draft.user.Posts = draft.user.Posts.filter(
+                    (item) => item !== action.data
+                );
             }),
     },
     initialState
