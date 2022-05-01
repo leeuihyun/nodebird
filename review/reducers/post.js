@@ -1,50 +1,12 @@
 import { createAction, handleActions } from "redux-actions";
 import produce from "immer";
 import shortId from "shortid";
+import faker from "faker";
 
 const initialState = {
-    mainPosts: [
-        {
-            id: "daf12sa",
-            User: {
-                id: 1,
-                nickname: "vanc",
-            },
-            content: "first post",
-            Images: [
-                {
-                    src: "https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726",
-                },
-                {
-                    src: "https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg",
-                },
-                {
-                    src: "https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg",
-                },
-            ],
-            Comments: [
-                {
-                    User: {
-                        nickname: "nero",
-                    },
-                    content: "우와 처음이에요~",
-                },
-                {
-                    User: {
-                        nickname: "mu",
-                    },
-                    content: "우와 두번째에요~",
-                },
-                {
-                    User: {
-                        nickname: "su",
-                    },
-                    content: "우와 세번째에요~",
-                },
-            ],
-        },
-    ],
+    mainPosts: [],
     imagePaths: [],
+    hasMoreData: false,
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
@@ -54,7 +16,36 @@ const initialState = {
     removePostLoading: false,
     removePostDone: false,
     removePostError: null,
+    loadPostLoading: false,
+    loadPostDone: false,
+    loadPostError: null,
 };
+
+export const generateDummyData = (number) =>
+    Array(number)
+        .fill()
+        .map((v, i) => ({
+            id: shortId.generate(),
+            User: {
+                id: shortId.generate(),
+                nickname: faker.name.findName(),
+            },
+            content: faker.lorem.paragraph(),
+            Images: [
+                {
+                    src: faker.image.image(),
+                },
+            ],
+            Comments: [
+                {
+                    User: {
+                        id: shortId.generate(),
+                        nickname: faker.name.findName(),
+                    },
+                    content: faker.lorem.sentence(),
+                },
+            ],
+        }));
 
 const dummyPost = (data) => ({
     id: data.id,
@@ -85,6 +76,10 @@ export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
 export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
+
+export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
+export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
+export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
 
 const post = handleActions(
     {
@@ -145,6 +140,27 @@ const post = handleActions(
             produce(state, (draft) => {
                 draft.removePostError = action.data.error;
                 draft.removePostLoading = false;
+            }),
+        [LOAD_POST_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+            }),
+        [LOAD_POST_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                draft.mainPosts = action.data.concat(draft.mainPosts);
+                draft.hasMoreData =
+                    action.data.concat(draft.mainPosts).length < 50;
+                console.log(action.data.concat(draft.mainPosts).length);
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.loadPostError = null;
+            }),
+        [LOAD_POST_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                draft.loadPostError = action.data.error;
+                draft.loadPostLoading = false;
             }),
     },
     initialState
