@@ -11,6 +11,8 @@ import {
     REMOVE_POST_REQUEST,
     REMOVE_POST_SUCCESS,
 } from "../reducers/post";
+import { ADD_POST_TO_ME, REMOVE_POST_TO_ME } from "../reducers/user";
+import shortId from "shortid";
 
 function addPostApi() {
     axios.post("/api");
@@ -18,9 +20,17 @@ function addPostApi() {
 function* addPost(action) {
     try {
         yield delay(1000);
+        const id = shortId.generate();
         yield put({
             type: ADD_POST_SUCCESS,
-            data: action.data,
+            data: {
+                id,
+                content: action.data,
+            },
+        });
+        yield put({
+            type: ADD_POST_TO_ME,
+            data: id,
         });
     } catch (error) {
         console.error(error);
@@ -60,6 +70,10 @@ function* removePost(action) {
         yield delay(1000);
         yield put({
             type: REMOVE_POST_SUCCESS,
+            data: action.data,
+        });
+        yield put({
+            type: REMOVE_POST_TO_ME,
             data: action.data,
         });
     } catch (error) {
