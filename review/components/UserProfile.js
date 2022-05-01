@@ -14,8 +14,6 @@ function UserProfile() {
         });
     }, []);
 
-    useEffect(() => {}, []); //logout ?
-
     return (
         <Card
             actions={[
