@@ -19,8 +19,8 @@ export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
 export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
 
 export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
-export const UNFOLLOW_SUCCESS = "FOLLOW_SUCCESS";
-export const UNFOLLOW_FAILURE = "FOLLOW_FAILURE";
+export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
+export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_TO_ME = "REMOVE_POST_TO_ME";
@@ -112,6 +112,7 @@ const user = handleActions(
             }),
         [FOLLOW_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
+                draft.user.Followings.push({ id: action.data }); //action.data === id 로 받을것.
                 draft.followLoading = false;
                 draft.followDone = true;
             }),
@@ -128,6 +129,9 @@ const user = handleActions(
             }),
         [UNFOLLOW_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
+                draft.user.Followings = draft.user.Followings.filter(
+                    (v) => v.id !== action.data
+                );
                 draft.unfollowLoading = false;
                 draft.unfollowDone = true;
             }),
