@@ -75,7 +75,7 @@ function* signUp(action) {
         const res = yield call(signUpApi, action.data);
         yield put({
             type: SIGN_UP_SUCCESS,
-            data: res.data,
+            //data: res.data,
         });
     } catch (error) {
         console.error(error);
