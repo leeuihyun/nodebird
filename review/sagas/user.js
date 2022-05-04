@@ -66,16 +66,16 @@ function* watchLogOut() {
     yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
-function signUpApi() {
-    return axios.post("/api");
+function signUpApi(data) {
+    return axios.post("http://localhost:3065/user", data);
 }
 function* signUp(action) {
     //const res = yield call(signUpApi, action.data);
     try {
-        yield delay(1000);
+        const res = yield call(signUpApi, action.data);
         yield put({
             type: SIGN_UP_SUCCESS,
-            data: action.data,
+            data: res.data,
         });
     } catch (error) {
         console.error(error);
