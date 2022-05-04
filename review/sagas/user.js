@@ -18,16 +18,15 @@ import {
     UNFOLLOW_REQUEST,
 } from "../reducers/user";
 
-function logInApi() {
-    return axios.post("/api");
+function logInApi(data) {
+    return axios.post("/user/login", data);
 }
 function* logIn(action) {
-    //const res = yield call(logInApi, action.data);
     try {
-        yield delay(1000);
+        const res = yield call(logInApi, action.data);
         yield put({
             type: LOG_IN_SUCCESS,
-            data: action.data,
+            data: res.data,
         });
     } catch (error) {
         console.error(error);
@@ -42,16 +41,15 @@ function* watchLogIn() {
     yield takeLatest(LOG_IN_REQUEST, logIn);
 }
 
-function logOutApi() {
-    return axios.post("/api");
+function logOutApi(data) {
+    return axios.post("/logout", data);
 }
 function* logOut(action) {
-    //const res = yield call(logOutApi, action.data);
     try {
-        yield delay(1000);
+        const res = yield call(logOutApi, action.data);
         yield put({
             type: LOG_OUT_SUCCESS,
-            data: action.data,
+            data: res.data,
         });
     } catch (error) {
         console.error(error);
@@ -67,10 +65,9 @@ function* watchLogOut() {
 }
 
 function signUpApi(data) {
-    return axios.post("http://localhost:3065/user", data);
+    return axios.post("/user", data);
 }
 function* signUp(action) {
-    //const res = yield call(signUpApi, action.data);
     try {
         const res = yield call(signUpApi, action.data);
         yield put({
