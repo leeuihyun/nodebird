@@ -93,14 +93,14 @@ function* watchAddComment() {
 }
 
 function loadPostApi() {
-    axios.post("/api");
+    axios.post("/posts", data);
 }
 function* loadPost(action) {
     try {
-        yield delay(1000);
+        const res = yield call(loadPostApi, action.data);
         yield put({
             type: LOAD_POST_SUCCESS,
-            data: generateDummyData(10),
+            data: res.data,
         });
     } catch (error) {
         console.error(error);
