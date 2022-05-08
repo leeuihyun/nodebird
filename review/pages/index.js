@@ -5,6 +5,7 @@ import PostForm from "../components/PostForm";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { LOAD_POST_REQUEST } from "../reducers/post";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 
 const Home = () => {
     const { user } = useSelector((state) => state.user);
@@ -14,6 +15,9 @@ const Home = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
+        dispatch({
+            type: LOAD_MY_INFO_REQUEST,
+        });
         dispatch({
             type: LOAD_POST_REQUEST,
         });
