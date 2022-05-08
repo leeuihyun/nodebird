@@ -12,7 +12,7 @@ const ErrorMessage = styled.div`
     color: red;
 `;
 const Signup = () => {
-    const { signUpDone, signUpLoading, signUpError } = useSelector(
+    const { signUpDone, signUpLoading, signUpError, user } = useSelector(
         (state) => state.user
     );
     const [nickname, onChangeNickname] = useInput("");
@@ -46,6 +46,13 @@ const Signup = () => {
             alert(signUpError);
         }
     }, [signUpError]);
+
+    useEffect(() => {
+        if (user) {
+            Router.push("/");
+        }
+    }, [user]);
+
     const onSubmitForm = useCallback(() => {
         if (password !== passwordCheck) {
             return setPasswordError(true);
