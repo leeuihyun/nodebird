@@ -28,10 +28,8 @@ function LoginForm() {
                 dispatch({
                     type: LOG_IN_REQUEST,
                     data: {
-                        User: {
-                            nickname: "Vanc",
-                            email,
-                        },
+                        email: email,
+                        password: password,
                     },
                 });
             }

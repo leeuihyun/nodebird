@@ -5,6 +5,7 @@ import { ADD_COMMENT_REQUEST } from "../reducers/post";
 import PropTypes from "prop-types";
 
 function CommentForm({ post }) {
+    const id = useSelector((state) => state.user.user?.id);
     const [text, setText] = useState("");
     const dispatch = useDispatch();
     const onChangeText = useCallback((e) => {
@@ -16,12 +17,9 @@ function CommentForm({ post }) {
         dispatch({
             type: ADD_COMMENT_REQUEST,
             data: {
-                id: post.id,
-                User: {
-                    id: user.id,
-                    nickname: user.nickname,
-                },
                 content: text,
+                PostId: post.id,
+                UserId: id,
             },
         });
     }, [text]);
