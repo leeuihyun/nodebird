@@ -25,6 +25,10 @@ export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_TO_ME = "REMOVE_POST_TO_ME";
 
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LAOD_MY_INFO_FAILURE";
+
 const initialState = {
     user: null,
     logInLoading: false,
@@ -42,16 +46,11 @@ const initialState = {
     unfollowLoading: false,
     unfollowDone: false,
     unfollowError: null,
+    loadMyInfoLoading: false,
+    loadMyInfoDone: false,
+    loadMyInfoError: null,
 };
 
-const dummyUser = (data) => ({
-    id: shortId.generate(),
-    email: data.User.email,
-    nickname: data.User.nickname,
-    Posts: [],
-    Followings: [],
-    Followers: [],
-});
 const user = handleActions(
     {
         [LOG_IN_REQUEST]: (state, action) =>
@@ -62,7 +61,7 @@ const user = handleActions(
             }),
         [LOG_IN_SUCCESS]: (state, action) =>
             produce(state, (draft) => {
-                draft.user = dummyUser(action.data);
+                draft.user = action.data;
                 draft.logInLoading = false;
                 draft.logInDone = true;
             }),
@@ -150,6 +149,22 @@ const user = handleActions(
                 draft.user.Posts = draft.user.Posts.filter(
                     (item) => item !== action.data
                 );
+            }),
+        [LOAD_MY_INFO_REQUEST]: (state, action) =>
+            produce(state, (draft) => {
+                loadMyInfoLoading = true;
+                loadMyInfoDone = false;
+                loadMyInfoError = null;
+            }),
+        [LOAD_MY_INFO_SUCCESS]: (state, action) =>
+            produce(state, (draft) => {
+                loadMyInfoLoading = false;
+                loadMyInfoDone = true;
+            }),
+        [LOAD_MY_INFO_FAILURE]: (state, action) =>
+            produce(state, (draft) => {
+                loadMyInfoLoading = false;
+                loadMyInfoError = action.error;
             }),
     },
     initialState
