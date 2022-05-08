@@ -137,7 +137,7 @@ function* watchUnfollow() {
 }
 
 function loadMyInfoApi() {
-    return axios.get();
+    return axios.get("/user");
 }
 
 function* loadMyInfo(action) {
