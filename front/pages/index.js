@@ -20,6 +20,7 @@ const Home = () => {
             alert(retweetError);
         }
     }, [retweetError]);
+
     useEffect(() => {
         function onScroll() {
             /* console.log(
