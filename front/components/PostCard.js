@@ -20,6 +20,7 @@ import {
 } from "../reducers/post";
 import FollowButton from "./FollowButton";
 import { useEffect } from "react";
+import Link from "next/link";
 
 function PostCard({ post }) {
     const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -130,7 +131,13 @@ function PostCard({ post }) {
                     >
                         <Card.Meta
                             avatar={
-                                <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
+                                <Link href={`/user/${post.Retweet.User.id}`}>
+                                    <a>
+                                        <Avatar>
+                                            {post.Retweet.User.nickname[0]}
+                                        </Avatar>
+                                    </a>
+                                </Link>
                             }
                             title={post.Retweet.User.nickname}
                             description={
@@ -142,7 +149,13 @@ function PostCard({ post }) {
                     </Card>
                 ) : (
                     <Card.Meta
-                        avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+                        avatar={
+                            <Link href={`/user/${post.User.id}`}>
+                                <a>
+                                    <Avatar>{post.User.nickname[0]}</Avatar>
+                                </a>
+                            </Link>
+                        }
                         title={post.User.nickname}
                         description={
                             <PostCardContent postData={post.content} />

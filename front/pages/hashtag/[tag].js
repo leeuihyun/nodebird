@@ -14,7 +14,7 @@ const Hashtag = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { tag } = router.query;
-    const { mainPosts, hasMorePosts, loadHashtagPostsLoading } = useSelector(
+    const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(
         (state) => state.post
     );
 
@@ -24,7 +24,7 @@ const Hashtag = () => {
                 window.pageYOffset + document.documentElement.clientHeight >
                 document.documentElement.scrollHeight - 300
             ) {
-                if (hasMorePosts && !loadHashtagPostsLoading) {
+                if (hasMorePosts && !loadPostsLoading) {
                     dispatch({
                         type: LOAD_HASHTAG_POSTS_REQUEST,
                         lastId:
@@ -53,7 +53,9 @@ const Hashtag = () => {
 export const getServerSideProps = wrapper.getServerSideProps(
     async (context) => {
         console.log(context);
+        console.log("1");
         const cookie = context.req ? context.req.headers.cookie : "";
+        console.log("2");
         console.log(context);
         axios.defaults.headers.Cookie = "";
         if (context.req && cookie) {
@@ -68,7 +70,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
         });
         context.store.dispatch(END);
         await context.store.sagaTask.toPromise();
-        return { props: {} };
     }
 );
 
