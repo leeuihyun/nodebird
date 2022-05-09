@@ -220,6 +220,7 @@ const user = handleActions(
         [LOAD_MY_INFO_REQUEST]: (state, action) =>
             produce(state, (draft) => {
                 draft.loadMyInfoLoading = true;
+                draft.loadMyInfoDone = false;
                 draft.loadMyInfoError = null;
             }),
         [LOAD_MY_INFO_SUCCESS]: (state, action) =>
@@ -227,7 +228,6 @@ const user = handleActions(
                 draft.user = action.data;
                 draft.loadMyInfoLoading = false;
                 draft.loadMyInfoDone = true;
-                draft.loadMyInfoError = null;
             }),
         [LOAD_MY_INFO_FAILURE]: (state, action) =>
             produce(state, (draft) => {
