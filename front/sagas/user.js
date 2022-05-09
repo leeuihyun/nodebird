@@ -260,7 +260,7 @@ function* removeFollower(action) {
         yield put({
             type: REMOVE_FOLLOWER_FAILURE,
             data: error.response.data,
-        });
+        }); 
     }
 }
 function* watchRemoveFollower() {
