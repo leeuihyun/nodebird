@@ -1,6 +1,7 @@
 import { createAction, handleActions } from "redux-actions";
 //import shortId from "shortid";
-import produce from "immer";
+import produce from "../util/produce";
+
 //import faker from "faker";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
