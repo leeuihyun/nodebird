@@ -1,4 +1,4 @@
-import produce from "immer";
+import produce from "../util/produce";
 import { createAction, handleActions } from "redux-actions";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
