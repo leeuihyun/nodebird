@@ -7,6 +7,7 @@ import {
     UPLOAD_IMAGES_REQUEST,
     REMOVE_IMAGES_REQUEST,
 } from "../reducers/post";
+import { backUrl } from "../config/config";
 
 function PostForm() {
     const { addPostDone, imagePaths, addPostLoading } = useSelector(
@@ -93,7 +94,7 @@ function PostForm() {
                     imagePaths.map((item, i) => (
                         <div key={item} style={{ display: "inline-block" }}>
                             <img
-                                src={`http://localhost:3065/${item}`}
+                                src={`${backUrl}/${item}`}
                                 style={{ width: "200px" }}
                                 alt={item}
                             />
