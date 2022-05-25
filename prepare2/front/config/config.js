@@ -1,1 +1,1 @@
-export const backUrl = "http://3.36.22.51";
+export const backUrl = "http://api.ffbird.com";
