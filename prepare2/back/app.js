@@ -25,7 +25,6 @@ db.sequelize
         console.log("db 연결 성공");
     })
     .catch(console.error);
-
 passportConfig();
 if (process.env.NODE_ENV === "production") {
     app.use(morgan("combined"));
@@ -46,6 +45,7 @@ if (process.env.NODE_ENV === "production") {
         })
     );
 }
+//dsfasd
 
 app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
