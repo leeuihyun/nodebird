@@ -21,6 +21,7 @@
         "moment": "^2.29.3",
         "next": "^9.5.5",
         "next-redux-wrapper": "^6.0.2",
+        "pm2": "^5.2.0",
         "prop-types": "^15.8.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
